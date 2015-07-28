@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
+    <xpath expr="//div[@name='mail_button']" position="replace">
+        <form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
+            <div t-attf-class="form-group #{error and 'contact_name' in error and 'has-error' or ''}">
+                <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
+                <div class="col-md-7 col-sm-8">
+                    <input type="text" class="form-control" name="contact_name" required="True" t-attf-value="#{contact_name or ''}"/>
+                </div>
+            </div>
+            <div t-attf-class="form-group #{error and 'phone' in error and 'has-error' or ''}">
+                <label class="col-md-3 col-sm-4 control-label" for="phone">Phone Number</label>
+                <div class="col-md-7 col-sm-8">
+                    <input type="text" class="form-control" name="phone" placeholder="ex. +55 27 32651000" t-attf-value="#{phone or ''}"/>
+                </div>
+            </div>
+            <div name="email_from_container" t-attf-class="form-group #{error and 'email_from' in error and 'has-error' or ''}">
+                <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+                <div class="col-md-7 col-sm-8">
+                    <input type="email" class="form-control" name="email_from" required="True" t-attf-value="#{email_from or ''}"/>
+                </div>
+            </div>
+            <div t-attf-class="form-group #{error and 'name' in error and 'has-error' or ''}">
+                <label class="col-md-3 col-sm-4 control-label" for="name">Subject</label>
+                <div class="col-md-7 col-sm-8">
+                    <input type="text" class="form-control" name="name" t-attf-value="#{name or ''}"/>
+                </div>
+            </div>
+            <div t-attf-class="form-group #{error and 'description' in error and 'has-error' or ''}">
+                <label class="col-md-3 col-sm-4 control-label" for="description">Your Question</label>
+                <div class="col-md-7 col-sm-8">
+                    <textarea  class="form-control" name="description" style="min-height: 120px" required="True"><t t-esc="description or ''"/></textarea>
+                </div>
+            </div>
+            <t t-foreach="kwargs" t-as="kwarg">
+                <input type="hidden" t-att-name="kwarg[0]" t-att-value="kwarg[1]"/>
+            </t>
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                    <button class="btn btn-primary btn-lg">Send</button>
+                </div>
+            </div>
+        </form>
+    </xpath>
+</template>
+
+<template id="contactus_form_company_name" name="Company Name" inherit_id="website_crm.contactus_form" customize_show="True">
+    <xpath expr="//div[@name='email_from_container']" position="after">
+        <div t-attf-class="form-group #{error and 'partner_name' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Company</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="partner_name" required="True" t-attf-value="#{partner_name or ''}"/>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+
+<template id="contactus_form_company_cnpj_cpf" name="CNPJ_CPF" inherit_id="website_crm.contactus_form" customize_show="True">
+    <xpath expr="//div[@name='email_from_container']" position="after">
+        <div t-attf-class="form-group #{error and 'cnpj' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="cnpj">CNPJ</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="cnpj" required="True" t-attf-value="#{cnpj or ''}"/>
+            </div>
+        </div>
+        <div t-attf-class="form-group #{error and 'inscr_est' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="inscr_est">Inscrição Estadual</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="inscr_est" required="False" t-attf-value="#{inscr_est or ''}"/>
+            </div>
+        </div>      
+        <div t-attf-class="form-group #{error and 'street' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="street">Endereço</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="street" required="True" t-attf-value="#{street or ''}"/>
+            </div>
+        </div> 
+        <div t-attf-class="form-group #{error and 'number' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="number">Número</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="number" required="True" t-attf-value="#{number or ''}"/>
+            </div>
+        </div>  
+        <div t-attf-class="form-group #{error and 'street2' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="street2">Complemento</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="street2" required="True" t-attf-value="#{street2 or ''}"/>
+            </div>
+        </div>
+        <div t-attf-class="form-group #{error and 'district' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="district">Bairro</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="district" required="True" t-attf-value="#{district or ''}"/>
+            </div>
+        </div> 
+        <div t-attf-class="form-group #{error and 'city' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="city">Município</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="city" required="False" t-attf-value="#{city or ''}"/>
+            </div>
+        </div>  
+        <div t-attf-class="form-group #{error and 'state' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="state">Estado</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="state" required="False" t-attf-value="#{state or ''}"/>
+            </div>
+        </div>  
+        <div t-attf-class="form-group #{error and 'country' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="country">País</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="country" required="False" t-attf-value="#{count or ''}"/>
+            </div>
+        </div>         
+    </xpath>     
+    <xpath expr="//div[@name='email_from_container']" position="before">
+        <div t-attf-class="form-group #{error and 'cpf' in error and 'has-error' or ''}">
+            <label class="col-md-3 col-sm-4 control-label" for="cpf">CPF</label>
+            <div class="col-md-7 col-sm-8">
+                <input type="text" class="form-control" name="cpf" required="False" t-attf-value="#{cpf or ''}"/>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="contactus_thanks" name="Contact us">
+    <t t-call="website.layout">
+      <div id="wrap">
+        <div class="oe_structure"/>
+        <div class="container">
+            <h1>Thanks!</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="alert alert-success">
+                        Your message has been sent successfully.
+                        <button type="button" class="close" data-dismiss="alert">&amp;times;</button>
+                    </div>
+                    <p>
+                        We will get back to you shortly.
+                    </p><p class="mt64">
+                        If you have an emergency, do not hesitate to contact us by phone:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li><i class="fa fa-phone"></i> : <span t-field="res_company.phone"/></li>
+                        <li><i class="fa fa-envelope"></i> : <span t-field="res_company.email"/></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <t t-call="website.company_description"/>
+                </div>
+            </div>
+        </div>
+        <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
+
+</data>
+</openerp>
