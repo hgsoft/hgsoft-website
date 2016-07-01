@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<openerp>
+	<data>
+
+        <record id="view_lead2opportunity_form" model="ir.ui.view">
+            <field name="name">view.crm.lead2opportunity.form</field>
+            <field name="model">crm.lead2opportunity.partner</field>
+            <field name="inherit_id" ref="crm.view_crm_lead2opportunity_partner"/>
+            <field name="arch" type="xml">
+            	<field name="partner_id" position="after">
+            		<field name="create_user" attrs="{ 'invisible': [('action', '=', 'nothing')] }" />
+            		<field name="send_mail" attrs="{ 'invisible': [('action', '=', 'nothing')] }" />
+            	</field>
+            </field>
+		</record>
+
+	</data>
+</openerp>
+            
+
