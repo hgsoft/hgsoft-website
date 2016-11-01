@@ -20,6 +20,6 @@ msgstr ""
 #: code:addons/odoo-apps/website_quick_addtocart/static/src/js/website_sale.js:5
 #: code:addons/website_quick_addtocart/static/src/js/website_sale.js:5
 #, python-format
-msgid "Success : Product has been added to your shopping cart."
+msgid "Sucesso : O produto foi adicionado para o seu carrinho."
 msgstr ""
 
