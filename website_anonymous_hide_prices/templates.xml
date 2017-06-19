@@ -78,7 +78,7 @@
                     <a id="add_to_cart" class="btn btn-primary btn-lg mt8 js_check_product a-submit" href="#">Add to Cart</a>
                   </div>
                 </form>
-		<form t-if="user_id.partner_id.name == 'Public user'" t-att-action="keep('/page/contactus')"  method="GET">
+		<form t-if="user_id.partner_id.name == 'Public user'" t-att-action="keep('/page/register')"  method="GET">
                   <div class="js_product">
                     <a id="signup" class="btn btn-primary btn-lg mt8 a-submit" href="#">Cadastre-se para Comprar</a>
                   </div>
