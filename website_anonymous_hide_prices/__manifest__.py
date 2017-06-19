@@ -12,19 +12,10 @@
     'author': "Michael Hucke, extended by HGSOFT",
     'website': "http://www.hgsoft.com.br",
     'contributors': ['Alexsandro Haag <alex@hgsoft.com.br>'],
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
-    # for the full list
     'category': 'website',
-    'version': '10.0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base','website_sale'],
-
-    # always loaded
+    'version': '10.0.2',
+    'depends': ['base','website_sale','website_register_b2b'],
     'data': [
-        # 'security/ir.model.access.csv',
         'templates.xml',
     ],
     'installable': True,
