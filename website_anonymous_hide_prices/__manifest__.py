@@ -14,7 +14,7 @@
     'contributors': ['Alexsandro Haag <alex@hgsoft.com.br>'],
     'category': 'website',
     'version': '10.0.2',
-    'depends': ['base','website_sale','website_register_b2b'],
+    'depends': ['base','website_sale','website_register_b2b_v11'],
     'data': [
         'templates.xml',
     ],
