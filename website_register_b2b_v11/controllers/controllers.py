@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.http import request
+from odoo.addons.website_form.controllers.main import WebsiteForm
 
 class WebsiteRegisterB2bV11(http.Controller):
      @http.route('/page/register', type='http', auth='public', website=True)
@@ -7,15 +9,14 @@ class WebsiteRegisterB2bV11(http.Controller):
         #return "Hello, world"
         return http.request.render('website.register', {})
 
-#     @http.route('/website_register_b2b_v11/website_register_b2b_v11/objects/', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('website_register_b2b_v11.listing', {
-#             'root': '/website_register_b2b_v11/website_register_b2b_v11',
-#             'objects': http.request.env['website_register_b2b_v11.website_register_b2b_v11'].search([]),
-#         })
+class WebsiteForm(WebsiteForm):
+    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
+    def website_form(self, model_name, **kwargs):
+        if model_name == 'crm.lead' and not request.params.get('state_id'):
+            geoip_country_code = request.session.get('geoip', {}).get('country_code')
+            geoip_state_code = request.session.get('geoip', {}).get('region')
+            if geoip_country_code and geoip_state_code:
+                State = request.env['res.country.state']
+                request.params['state_id'] = State.search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)]).id
 
-#     @http.route('/website_register_b2b_v11/website_register_b2b_v11/objects/<model("website_register_b2b_v11.website_register_b2b_v11"):obj>/', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('website_register_b2b_v11.object', {
-#             'object': obj
-#         })
+        return super(WebsiteForm, self).website_form(model_name, **kwargs)
