@@ -17,9 +17,11 @@
                     <div t-attf-class="form-group #{error and 'contact_name' in error and 'has-error' or ''}">
                         <label class="col-md-3 col-sm-4 control-label" for="name">Nome
                             </label>
+                        
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control" name="name" required="True" t-attf-value="#{name or ''}"/>
                         </div>
+                    
                     </div>
                     
                     <div t-attf-class="form-group #{error and 'partner_name' in error and 'has-error' or ''}">
@@ -48,7 +50,8 @@
                     
                     <div t-attf-class="form-group #{error and 'street' in error and 'has-error' or ''}">
                         <label class="col-md-3 col-sm-4 control-label" for="street">Endereço
-                            </label>
+                    </label>
+                    
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control" name="street" required="True" t-attf-value="#{street or ''}"/>
                         </div>
@@ -161,7 +164,7 @@
                         data-model_name="crm.lead" 
                         data-success_page="/contactus-thank-you">
                     
-                                        <div class="form-group form-field o_website_form_required_custom">
+                        <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
                             <div class="col-md-7 col-sm-8">
                                 <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
