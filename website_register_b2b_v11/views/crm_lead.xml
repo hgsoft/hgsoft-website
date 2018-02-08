@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record id="view_crm_lead2opportunity_partner_inherit" model="ir.ui.view">
+            <field name="name">crm.lead2opportunity.partner.inherit</field>
+            <field name="model">crm.lead2opportunity.partner</field>
+            <field name="inherit_id" ref="crm.view_crm_lead2opportunity_partner"/>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <xpath expr="//form/group[4]/field" position="inside">
+                    <label string="Criar cliente e usuário"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
