@@ -96,7 +96,7 @@ class CrmLead(models.Model):
         print ("##### convert_opportunity [END] #####")
         
         return True
-
+    """
 class Lead2OpportunityMassConvert(models.TransientModel):
     _inherit = 'crm.partner.binding'
     
@@ -107,10 +107,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         ('nothing', 'Do not link to a customer')
     ], 'Related Customer', required=True)
     
-    
-    
-    
-    
+    """
     """
     
     #####
