@@ -49,6 +49,26 @@ class CrmLead(models.Model):
         
         user.create(vals)
         
+        print ("##### groups_write [START] #####")
+    
+        user = self.env['res.users'].search([('login','=', vals['login'])])
+        
+        groups_remove_acess = [1, 3, 4, 11, 12, 13, 15, 16, 25, 26, 27]
+        
+        groups_grant_acess = [9]
+        
+        for x in groups_remove_acess:
+            group = self.env['res.groups'].search([('id','=', x)])
+
+            group.write({'users': [(3, user.id)]})
+        
+        for y in groups_grant_acess:
+            group = self.env['res.groups'].search([('id','=', y)])
+        
+            group.write({'users': [(4, user.id)]})
+        
+        print ("##### groups_write [END] #####")
+        
         print ("##### create_user [END] #####")
         
         print ("##### _convert_opportunity_data [END] #####")
@@ -86,3 +106,18 @@ class Lead2OpportunityMassConvert(models.TransientModel):
         ('create_both', 'Create a new customer and user'),
         ('nothing', 'Do not link to a customer')
     ], 'Related Customer', required=True)
+    
+    
+    
+    
+    
+
+    #####
+    """
+    def set_commission_group(self, user_id):
+        commission_group = self.env.ref('your_module_name.salesmen_commission_group')
+        commission_group.write({'users': [(4, user_id)]})
+    """
+    #####
+    
+    
