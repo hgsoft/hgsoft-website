@@ -1,10 +1,98 @@
-from openerp import models, fields, api
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api, tools
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
+import re
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
+        
+    #####
+        
+    @api.multi
+    def _lead_create_contact(self, name, is_company, parent_id=False):
+        
+        print ("##### _lead_create_contact [START] #####")
+        
+        #####
+        
+        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "city : ", "state : ", "country : "]
+
+        table_infos = []
+        
+        #custom_infos = "abc Custom infos cnpj : abc123 aisjasijasi inscr_est : Insc Est dkkk street : abc number : abc street2 : abc district : abc city : abc state : abc country : abc"
+
+        custom_infos = self.description
+        
+        #.encode('utf8')
+        
+        custom_infos = custom_infos.replace("\n", " ")
+        
+        for x in range(8):
+
+            matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+
+            temp = re.sub(".*" + key_word[x], "", matches.group())
+            
+            temp = re.sub(key_word[x+1], "", temp)
+            
+            table_infos.append(temp.decode('utf8'))
+            
+        """
+        table_infos
+        0 | cnpj,
+        1 | inscr_est,
+        2 | street,
+        3 | number,
+        4 | street2,
+        5 | district,
+        6 | city,
+        7 | state,
+        8 | country
+        """
+        #####
+        
+        print table_infos[0]
+        print table_infos[1]
+        print table_infos[3]
+        print table_infos[5]
+        
+        email_split = tools.email_split(self.email_from)
+        values = {
+            'name': name,
+            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+            'comment': self.description,
+            'team_id': self.team_id.id,
+            'parent_id': parent_id,
+            'phone': self.phone,
+            'mobile': self.mobile,
+            'email': email_split[0] if email_split else False,
+            'fax': self.fax,
+            'title': self.title.id,
+            'function': self.function,
+            
+            'cnpj_cpf': table_infos[0],
+            'inscr_est': table_infos[1],
+            'number': table_infos[3],
+            'district': table_infos[5],
+            
+            'street': table_infos[2],
+            'street2': table_infos[4],
+            
+            'zip': self.zip,
+            'city': self.city,
+            'country_id': self.country_id.id,
+            'state_id': self.state_id.id,
+            'is_company': is_company,
+            'type': 'contact'
+        }
+        
+        print ("##### _lead_create_contact [END] #####")
+        
+        return self.env['res.partner'].create(values)
+    
+    #####
     
     @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
@@ -72,7 +160,15 @@ class CrmLead(models.Model):
         print ("##### create_user [END] #####")
         
         print ("##### _convert_opportunity_data [END] #####")
+       
+        #####
         
+        partner = self.env['res.partner'].search([('id','=', 144)])
+        
+        print partner.comment
+        
+        #####
+       
         return value
     
     

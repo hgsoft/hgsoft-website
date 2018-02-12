@@ -5,7 +5,7 @@
             <div id="wrap">
             <div class="oe_structure">
             <div class="container">
-                <h1>Cadastre-se para começar a comprar</h1>
+                <h1>Cadastre-se para começar a comprar.</h1>
                 
                 <form action="/website_form/" method="post" 
                         class="s_website_form form-horizontal container-fluid mt32" 
@@ -15,20 +15,20 @@
                     
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="contact_name">Nome</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                         </div>
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="partner_name">Your Company</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="partner_name">Empresa</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="partner_name" required="" t-att-value="request.params.get('partner_name', '')" />
                         </div>
                     </div>
                     
-                    <!--
+                    
                     <div class="form-group form-field o_website_form_required_custom">
                         <label class="col-md-3 col-sm-4 control-label" for="cnpj">CNPJ</label>
                         <div class="col-md-7 col-sm-8">
@@ -44,58 +44,58 @@
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="street">street</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="street">Rua</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="street" required="" t-att-value="request.params.get('street', '')" />
                         </div>
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="number">Number</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="number">Número</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="number" required="" t-att-value="request.params.get('number', '')" />
                         </div>
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="street2">street2</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="street2">Complemento</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="street2" required="" t-att-value="request.params.get('street2', '')" />
                         </div>
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="district">District</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="district">Bairro</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="district" required="" t-att-value="request.params.get('district', '')" />
                         </div>
                     </div>
                     
-                    -->
+                    
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="city">city</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="city">Cidade</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="city" required="" t-att-value="request.params.get('city', '')" />
                         </div>
                     </div>
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="state">state</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="state">Estado</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="state" required="" t-att-value="request.params.get('state', '')" />
                         </div>
                     </div>
                 
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="country">country</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="country">País</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="country" required="" t-att-value="request.params.get('country', '')" />
                         </div>
                     </div>
                     
                     <div class="form-group form-field">
-                        <label class="col-md-3 col-sm-4 control-label" for="phone">Phone Number</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="phone">Telefone</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
                         </div>
@@ -111,14 +111,14 @@
                     
                     
                     <div class="form-group form-field o_website_form_required">
-                        <label class="col-md-3 col-sm-4 control-label" for="name">Subject</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="name">Assunto</label>
                         <div class="col-md-7 col-sm-8">
                             <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
                         </div>
                     </div>  
                     
                     <div class="form-group form-field o_website_form_required_custom">
-                        <label class="col-md-3 col-sm-4 control-label" for="description">Your Question</label>
+                        <label class="col-md-3 col-sm-4 control-label" for="description">Dúvidas</label>
                         <div class="col-md-7 col-sm-8">
                             <textarea class="form-control o_website_form_input" name="description" required=""><t t-esc="request.params.get('description', '')"/></textarea>
                         </div>

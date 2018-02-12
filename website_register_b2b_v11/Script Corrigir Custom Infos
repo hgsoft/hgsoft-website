@@ -1,0 +1,42 @@
+import re
+
+#custom_infos = "abc Custom infos cnpj : abc inscr_est : abc street : abc number : abc street2 : abc district : abc city : abc state : abc country : abc"
+print ("1")
+custom_infos = "abc Custom infos cnpj : abc inscr_est : Insc Est street : abc number : abc street2 : abc district : abc city : abc state : abc country : abc"
+print ("2")
+custom_infos = re.sub(".*Custom infos\s", "", custom_infos)
+print ("3")
+custom_infos = re.sub(" : ", ":", custom_infos)
+print ("4")
+custom_infos_list = custom_infos.split()
+print ("5")
+for custom_info in custom_infos_list:
+    print custom_info
+print ("6")
+custom_infos_list.remove(custom_infos_list[0])
+print ("7")
+print custom_infos_list
+print ("8")
+custom_infos_dict = dict(custom_info.split(':') for custom_info in custom_infos_list)
+print ("9")
+Dúvidas
+
+Custom infos
+___________
+
+cnpj : CNPJ
+inscr_est : Insc Est
+street : Rua
+number : Num
+street2 : Comp
+district : Bairro
+city : Cidade
+state : Estado
+country : País
+----------------
+
+[u'CNPJ ', u'Estadual ', u'Rua ', u'N\xfamero ', u'Complemento ', u'Bairro ', u'Cidade ', u'Estado ']
+{'comment': u'D\xfavidas\n\nCustom infos\n___________\n\ncnpj : CNPJ\ninscr_est : Estadual\nstreet : Rua\nnumber : N\xfamero\nstreet2 : Complemento\ndistrict : Bairro\ncity : Cidade\nstate : Estado\ncountry : Pa\xeds\n\n\n', 'number': u'N\xfamero ', 'team_id': 1, 'street': u'Rua ', 'city': False, 'user_id': 1, 'zip': False, 'title': False, 'country_id': False, 'parent_id': 177, 'type': 'contact', 'email': False, 'is_company': False, 'function': False, 'cnpj': u'CNPJ ', 'fax': False, 'street2': u'Complemento ', 'phone': u'Telefone', 'district': u'Bairro ', 'inscr_est': u'Estadual ', 'name': u'Nome', 'mobile': False, 'state_id': False}
+
+
+
