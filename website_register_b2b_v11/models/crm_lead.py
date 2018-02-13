@@ -15,17 +15,11 @@ class CrmLead(models.Model):
         
         print ("##### _lead_create_contact [START] #####")
         
-        #####
-        
         key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "city : ", "state : ", "country : "]
 
         table_infos = []
         
-        #custom_infos = "abc Custom infos cnpj : abc123 aisjasijasi inscr_est : Insc Est dkkk street : abc number : abc street2 : abc district : abc city : abc state : abc country : abc"
-
         custom_infos = self.description
-        
-        #.encode('utf8')
         
         custom_infos = custom_infos.replace("\n", " ")
         
@@ -37,7 +31,7 @@ class CrmLead(models.Model):
             
             temp = re.sub(key_word[x+1], "", temp)
             
-            table_infos.append(temp.decode('utf8'))
+            table_infos.append(temp)
             
         """
         table_infos
@@ -51,14 +45,18 @@ class CrmLead(models.Model):
         7 | state,
         8 | country
         """
-        #####
-        
-        print table_infos[0]
-        print table_infos[1]
-        print table_infos[3]
-        print table_infos[5]
+
+        """
+        self.cnpj = table_infos[0]
+        self.inscr_est = table_infos[1]
+        self.number = table_infos[3]
+        self.district = table_infos[5]
+        self.street = table_infos[2]
+        self.street2 = table_infos[4]
+        """
         
         email_split = tools.email_split(self.email_from)
+        
         values = {
             'name': name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
@@ -71,15 +69,8 @@ class CrmLead(models.Model):
             'fax': self.fax,
             'title': self.title.id,
             'function': self.function,
-            
-            'cnpj_cpf': table_infos[0],
-            'inscr_est': table_infos[1],
-            'number': table_infos[3],
-            'district': table_infos[5],
-            
-            'street': table_infos[2],
-            'street2': table_infos[4],
-            
+            'street': self.street,
+            'street2': self.street2,
             'zip': self.zip,
             'city': self.city,
             'country_id': self.country_id.id,
@@ -88,11 +79,44 @@ class CrmLead(models.Model):
             'type': 'contact'
         }
         
-        print ("##### _lead_create_contact [END] #####")
+        if is_company:
+            self.cnpj = table_infos[0]
+            
+            self.inscr_est = table_infos[1]
+            
+            values = {
+                'name': name,
+                'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+                'comment': self.description,
+                'team_id': self.team_id.id,
+                'parent_id': parent_id,
+                'phone': self.phone,
+                'mobile': self.mobile,
+                'email': email_split[0] if email_split else False,
+                'fax': self.fax,
+                'title': self.title.id,
+                'function': self.function,
+                
+                'cnpj_cpf': table_infos[0],
+                'inscr_est': table_infos[1],
+                'number': table_infos[3],
+                'district': table_infos[5],
+                'street': table_infos[2],
+                'street2': table_infos[4],
+                
+                'zip': self.zip,
+                'city': self.city,
+                'country_id': self.country_id.id,
+                'state_id': self.state_id.id,
+                'is_company': is_company,
+                'type': 'contact'
+            }
         
+        print ("##### _lead_create_contact [END] #####")
+            
         return self.env['res.partner'].create(values)
     
-    #####
+        #####
     
     @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
@@ -164,8 +188,6 @@ class CrmLead(models.Model):
         #####
         
         partner = self.env['res.partner'].search([('id','=', 144)])
-        
-        print partner.comment
         
         #####
        
