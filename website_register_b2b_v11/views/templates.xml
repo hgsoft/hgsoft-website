@@ -94,6 +94,55 @@
                         </div>
                     </div>
                     
+                    <!---->
+                    <t t-set="var_country_id" t-value="0"/>
+                    <div class="form-group form-field o_website_form_required_custom">
+                        <label class="col-md-3 col-sm-4 control-label" for="country_id">Country</label>
+                        <select id="country_id" name="country_id" class="form-control o_website_form_input">
+                            <option value="">Select country...</option>
+                                <t t-foreach="countries" t-as="c">
+                                    <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
+                                        <t t-esc="c.name"/>
+                                        <t t-set="var_country_id" t-value="c.id == (country and country.id)"/>
+                                    </option>                          
+                                </t>
+                        </select>
+                    </div>
+                
+                    <!---->
+                    <div class="form-group form-field o_website_form_required_custom">
+                        <label class="col-md-3 col-sm-4 control-label" for="state_id">State</label>
+                        <select id="state_id" name="state_id" class="form-control o_website_form_input">
+                            <option value="">Select state...</option>
+                                <!--
+                                <t t-foreach="states" t-as="s">
+                                -->
+                                <t t-foreach="states" t-as="s">
+                                    <option t-att-value="s.id" t-att-selected="s.id == var_country_id">
+                                        <t t-esc="s.name"/>
+                                        
+                                        <p t-if="s.country_id.id == var_country_id">
+                                            <t t-esc="s.name"/>
+                                        </p>
+                                        
+                                    </option>                          
+                                </t>
+                        </select>
+                    </div>
+                    <!--
+                    <div class="form-group form-field o_website_form_required_custom">
+                        <label class="col-md-3 col-sm-4 control-label" for="state_id">Country</label>
+                        <select id="state_id" name="state_id" class="form-control o_website_form_input">
+                            <option value="">Select state...</option>
+                                <t t-foreach="country.state_ids" t-as="s">
+                                    <option t-att-value="s.id" t-att-selected="s.id == country">
+                                        <t t-esc="s.name"/>
+                                    </option>                          
+                                </t>
+                        </select>
+                    </div>
+                    -->
+                    <!---->
                     <div class="form-group form-field">
                         <label class="col-md-3 col-sm-4 control-label" for="phone">Telefone</label>
                         <div class="col-md-7 col-sm-8">
@@ -107,8 +156,6 @@
                             <input type="text" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
                         </div>
                     </div>
-                    
-                    
                     
                     <div class="form-group form-field o_website_form_required">
                         <label class="col-md-3 col-sm-4 control-label" for="name">Assunto</label>
@@ -134,7 +181,6 @@
                             <span id="o_website_form_result"></span>
                         </div>
                     </div>
-                    
                 </form>
             </div>
             </div>
