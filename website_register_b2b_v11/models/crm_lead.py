@@ -15,7 +15,7 @@ class CrmLead(models.Model):
         
         print ("##### _lead_create_contact [START] #####")
         
-        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "city : ", "state : ", "country : "]
+        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
 
         table_infos = []
         
@@ -23,16 +23,22 @@ class CrmLead(models.Model):
         
         custom_infos = custom_infos.replace("\n", " ")
         
-        for x in range(8):
+        #
+        for x in range(9):
 
-            matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+            if x < len(key_word)-1:
+                matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+            else:
+                matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
 
             temp = re.sub(".*" + key_word[x], "", matches.group())
-            
-            temp = re.sub(key_word[x+1], "", temp)
-            
+
+            if x < len(key_word)-1:
+                temp = re.sub(key_word[x+1], "", temp)
+
             table_infos.append(temp)
-            
+        #
+
         """
         table_infos
         0 | cnpj,
@@ -56,6 +62,10 @@ class CrmLead(models.Model):
         """
         
         email_split = tools.email_split(self.email_from)
+        
+        #self.city = int(table_infos[6])
+        #self.country_id.id = int(table_infos[8])
+        #self.state_id.id = int(table_infos[7])
         
         values = {
             'name': name,
@@ -104,10 +114,15 @@ class CrmLead(models.Model):
                 'street': table_infos[2],
                 'street2': table_infos[4],
                 
-                'zip': self.zip,
+                #'city': int(table_infos[6]),
+                #'country_id': int(table_infos[8]),
+                #'state_id': int(table_infos[7]),
+                
                 'city': self.city,
                 'country_id': self.country_id.id,
                 'state_id': self.state_id.id,
+                
+                'zip': self.zip,
                 'is_company': is_company,
                 'type': 'contact'
             }
@@ -121,6 +136,35 @@ class CrmLead(models.Model):
     @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
         print ("##### _convert_opportunity_data [START] #####")
+        
+        #
+        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+
+        table_infos = []
+        
+        custom_infos = self.description
+        
+        custom_infos = custom_infos.replace("\n", " ")
+        
+        #
+        for x in range(9):
+
+            if x < len(key_word)-1:
+                matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+            else:
+                matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
+
+            temp = re.sub(".*" + key_word[x], "", matches.group())
+
+            if x < len(key_word)-1:
+                temp = re.sub(key_word[x+1], "", temp)
+
+            table_infos.append(temp)
+        
+                  #'city': int(table_infos[6]),
+                #'country_id': int(table_infos[8]),
+                #'state_id': int(table_infos[7]),
+        #
     
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
@@ -134,6 +178,9 @@ class CrmLead(models.Model):
             'email_from': customer and customer.email or self.email_from,
             'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
+            'city_id': int(table_infos[6]),
+            'country_id': int(table_infos[8]),
+            'state_id': int(table_infos[7]),
         }
         if not self.stage_id:
             stage = self._stage_find(team_id=team_id)

@@ -33,7 +33,7 @@
 
     'version': '1.0',
 
-    'depends': ['base','website_sale'],
+    'depends': ['base','website_sale', 'br_website_sale'],
 
     'data': [
         'views/templates.xml',
