@@ -8,8 +8,6 @@ import re
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
         
-    #####
-        
     @api.multi
     def _lead_create_contact(self, name, is_company, parent_id=False):
         
@@ -23,7 +21,6 @@ class CrmLead(models.Model):
         
         custom_infos = custom_infos.replace("\n", " ")
         
-        #
         for x in range(9):
 
             if x < len(key_word)-1:
@@ -37,7 +34,6 @@ class CrmLead(models.Model):
                 temp = re.sub(key_word[x+1], "", temp)
 
             table_infos.append(temp)
-        #
 
         """
         table_infos
@@ -47,47 +43,39 @@ class CrmLead(models.Model):
         3 | number,
         4 | street2,
         5 | district,
-        6 | city,
+        6 | country,
         7 | state,
-        8 | country
-        """
-
-        """
-        self.cnpj = table_infos[0]
-        self.inscr_est = table_infos[1]
-        self.number = table_infos[3]
-        self.district = table_infos[5]
-        self.street = table_infos[2]
-        self.street2 = table_infos[4]
+        8 | city
         """
         
         email_split = tools.email_split(self.email_from)
         
-        #self.city = int(table_infos[6])
-        #self.country_id.id = int(table_infos[8])
-        #self.state_id.id = int(table_infos[7])
+        custom_country = self.env['res.country'].search([('id','=', int(table_infos[6]))])
+        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[7]))])
+        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[8]))])
         
-        values = {
-            'name': name,
-            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
-            'comment': self.description,
-            'team_id': self.team_id.id,
-            'parent_id': parent_id,
-            'phone': self.phone,
-            'mobile': self.mobile,
-            'email': email_split[0] if email_split else False,
-            'fax': self.fax,
-            'title': self.title.id,
-            'function': self.function,
-            'street': self.street,
-            'street2': self.street2,
-            'zip': self.zip,
-            'city': self.city,
-            'country_id': self.country_id.id,
-            'state_id': self.state_id.id,
-            'is_company': is_company,
-            'type': 'contact'
-        }
+        if not is_company:
+            values = {
+                'name': name,
+                'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+                'comment': self.description,
+                'team_id': self.team_id.id,
+                'parent_id': parent_id,
+                'phone': self.phone,
+                'mobile': self.mobile,
+                'email': email_split[0] if email_split else False,
+                'fax': self.fax,
+                'title': self.title.id,
+                'function': self.function,
+                'street': self.street,
+                'street2': self.street2,
+                'zip': self.zip,
+                'city': self.city,
+                'country_id': self.country_id.id,
+                'state_id': self.state_id.id,
+                'is_company': is_company,
+                'type': 'contact'
+            }
         
         if is_company:
             self.cnpj = table_infos[0]
@@ -114,58 +102,21 @@ class CrmLead(models.Model):
                 'street': table_infos[2],
                 'street2': table_infos[4],
                 
-                #'city': int(table_infos[6]),
-                #'country_id': int(table_infos[8]),
-                #'state_id': int(table_infos[7]),
-                
-                'city': self.city,
-                'country_id': self.country_id.id,
-                'state_id': self.state_id.id,
-                
+                'city_id': custom_city.id,
+                'country_id': custom_country.id,
+                'state_id': custom_state.id,
                 'zip': self.zip,
                 'is_company': is_company,
                 'type': 'contact'
             }
-        
         print ("##### _lead_create_contact [END] #####")
-            
-        return self.env['res.partner'].create(values)
     
-        #####
+        return self.env['res.partner'].create(values)
     
     @api.multi
     def _convert_opportunity_data(self, customer, team_id=False):
         print ("##### _convert_opportunity_data [START] #####")
-        
-        #
-        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
-
-        table_infos = []
-        
-        custom_infos = self.description
-        
-        custom_infos = custom_infos.replace("\n", " ")
-        
-        #
-        for x in range(9):
-
-            if x < len(key_word)-1:
-                matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
-            else:
-                matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
-
-            temp = re.sub(".*" + key_word[x], "", matches.group())
-
-            if x < len(key_word)-1:
-                temp = re.sub(key_word[x+1], "", temp)
-
-            table_infos.append(temp)
-        
-                  #'city': int(table_infos[6]),
-                #'country_id': int(table_infos[8]),
-                #'state_id': int(table_infos[7]),
-        #
-    
+      
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
         value = {
@@ -178,9 +129,6 @@ class CrmLead(models.Model):
             'email_from': customer and customer.email or self.email_from,
             'phone': customer and customer.phone or self.phone,
             'date_conversion': fields.Datetime.now(),
-            'city_id': int(table_infos[6]),
-            'country_id': int(table_infos[8]),
-            'state_id': int(table_infos[7]),
         }
         if not self.stage_id:
             stage = self._stage_find(team_id=team_id)
@@ -195,7 +143,7 @@ class CrmLead(models.Model):
         vals = {
             'active': True,
             'login': value.get('email_from'),
-            'password': "teste",
+            #'password': "teste",
             'partner_id': value.get('partner_id'),
             'share': False,
             'alias_id': 1,
@@ -231,12 +179,6 @@ class CrmLead(models.Model):
         print ("##### create_user [END] #####")
         
         print ("##### _convert_opportunity_data [END] #####")
-       
-        #####
-        
-        partner = self.env['res.partner'].search([('id','=', 144)])
-        
-        #####
        
         return value
     

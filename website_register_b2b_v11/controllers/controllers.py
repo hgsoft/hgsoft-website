@@ -21,18 +21,6 @@ class WebsiteRegisterB2bV11(http.Controller):
          }
         return http.request.render('website.register', values)
 
-class WebsiteForm(http.Controller):
-    @http.route(['/page/register/get_states'], type='json', auth="public",
-                methods=['POST'], website=True)
-    def get_states_json(self, country_id):
-        print ("----- A -----")
-        if country_id and country_id.isdigit():
-            print ("----- B -----")
-            states = request.env['res.country.state'].sudo().search(
-                [('country_id', '=', int(country_id))])
-            return [(state.id, state.name) for state in states]
-        return []
-
 class WebsiteForm(WebsiteForm):
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):

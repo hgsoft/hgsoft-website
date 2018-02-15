@@ -1,30 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-    <!--
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Account Manager">
-      <xpath expr="." position="inside">
-          <script type="text/javascript" src="/website_portal/static/src/js/website_portal.js"></script>
-      </xpath>
-    </template>
-    -->
-    <!--
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Account Manager">
-      <xpath expr="." position="inside">
-          <script type="text/javascript" src="/website_register_b2b_v11/static/src/js/website_portal.js"></script>
-      </xpath>
-    </template>
-    -->
-    <!--
-    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop BR">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/br_website_sale/static/src/js/jquery.mask.min.js"></script>
-            <script type="text/javascript" src="/br_website_sale/static/src/js/website_sale.js"></script>
-        </xpath>
-    </template>
-    -->
-    
-
         <template id="website.register" name="Register">
             <t t-call="website.layout">
                 <div id="wrap">
@@ -40,9 +16,9 @@
                         
                         
                         <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="contact_name">Nome</label>
+                            <label class="col-md-3 col-sm-4 control-label" for="contact_name_a">Nome</label>
                             <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                                <input type="text" class="form-control o_website_form_input" id="contact_name_a" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                             </div>
                         </div>
                         
@@ -96,31 +72,6 @@
                             </div>
                         </div>
                         
-                        
-                        <!--
-                        <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="city">Cidade</label>
-                            <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="city" required="" t-att-value="request.params.get('city', '')" />
-                            </div>
-                        </div>
-                        
-                        <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="state">Estado</label>
-                            <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="state" required="" t-att-value="request.params.get('state', '')" />
-                            </div>
-                        </div>
-                    
-                        <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="country">País</label>
-                            <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="country" required="" t-att-value="request.params.get('country', '')" />
-                            </div>
-                        </div>
-                        -->
-                        <!---->
-                        
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="country_id">País</label>
                             <div class="col-md-7 col-sm-8">
@@ -171,46 +122,6 @@
                             </div>  
                         </div>
                         
-                        <!---->
-                        
-                        <!--
-                        <t t-set="var_country_id"/>
-                        
-                        <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="country_id">Country</label>
-                            <select id="country_id" name="country_id" class="form-control o_website_form_input">
-                                <option value="">Select country...</option>
-                                    <t t-foreach="countries" t-as="c">
-                                        <option t-att-value="c.id" t-att-selected="c.id == False">
-                                            <t t-esc="c.name"/>
-                                        </option>                          
-                                    </t>
-                            </select>
-                        </div>
-                        -->
-                        <!---->
-                        <!--
-                        <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="state_id">State</label>
-                            <select id="state_id" name="state_id" class="form-control o_website_form_input">
-                                <option value="">Select state...</option>
-                                    <t t-foreach="states" t-as="s">
-                                        <t t-foreach="doc.field.sorted(key=lambda r: r.year)" t-as="item">
-                                            <t t-esc="item"/> <br/>
-                                            <t t-esc="item.year"/>
-                                            <br/> <br/> <br/>
-                                        </t>
-                                    <t t-foreach="states" t-as="s">
-                                        <option t-att-value="s.id" t-att-selected="s.id == False">
-                                            <p t-if="s.country_id == var_country_id">
-                                                <t t-esc="s.name"/>
-                                            </p>
-                                        </option>                          
-                                    </t>
-                            </select>
-                        </div>
-                        -->
-                        <!---->
                         <div class="form-group form-field">
                             <label class="col-md-3 col-sm-4 control-label" for="phone">Telefone</label>
                             <div class="col-md-7 col-sm-8">
@@ -245,7 +156,7 @@
                         
                         <div class="form-group">
                             <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-                                <span class="btn btn-primary btn-lg o_website_form_send">Send</span>
+                                <span class="btn btn-primary btn-lg o_website_form_send">Enviar</span>
                                 <span id="o_website_form_result"></span>
                             </div>
                         </div>

@@ -37,8 +37,6 @@
 
     'data': [
         'views/templates.xml',
-        'views/views.xml',
-        'views/crm_lead.xml',
     ],
 
 }
