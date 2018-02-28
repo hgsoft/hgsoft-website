@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        
+        <template id="register_b2b_login" inherit_id="web.login" name="Register_b2b - Login">
+            
+            <xpath expr="//div[@class='clearfix oe_login_buttons']" position="inside">
+            
+                <a class="btn btn-info pull-right" href="/page/register">Registre-se</a>
+            
+            </xpath>
+            
+        </template>
+        
         <template id="website.register" name="Register">
             <t t-call="website.layout">
                 <div id="wrap">
