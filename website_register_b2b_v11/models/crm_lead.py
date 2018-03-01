@@ -13,7 +13,11 @@ class CrmLead(models.Model):
         
         print ("##### _lead_create_contact [START] #####")
         
-        key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+        #Nomes dos campos a serem separados e preenchidos.
+        
+        #key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+
+        key_word = ["cnpj_cpf : ", "inscr_est : ", "zip : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
 
         table_infos = []
         
@@ -21,7 +25,11 @@ class CrmLead(models.Model):
         
         custom_infos = custom_infos.replace("\n", " ")
         
-        for x in range(9):
+        #Quantidade de campos a serem separados e preenchidos.
+        
+        FIELDS_QTY = 10;
+        
+        for x in range(FIELDS_QTY):
 
             if x < len(key_word)-1:
                 matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
@@ -37,22 +45,23 @@ class CrmLead(models.Model):
 
         """
         table_infos
-        0 | cnpj,
+        0 | cnpj_cpf,
         1 | inscr_est,
-        2 | street,
-        3 | number,
-        4 | street2,
-        5 | district,
-        6 | country,
-        7 | state,
-        8 | city
+        2 | zip,
+        3 | street,
+        4 | number,
+        5 | street2,
+        6 | district,
+        7 | country_id,
+        8 | state_id,
+        9 | city_id
         """
         
         email_split = tools.email_split(self.email_from)
         
-        custom_country = self.env['res.country'].search([('id','=', int(table_infos[6]))])
-        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[7]))])
-        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[8]))])
+        custom_country = self.env['res.country'].search([('id','=', int(table_infos[7]))])
+        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[8]))])
+        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[9]))])
         
         if not is_company:
             values = {
@@ -63,7 +72,7 @@ class CrmLead(models.Model):
                 'parent_id': parent_id,
                 'phone': self.phone,
                 'mobile': self.mobile,
-                'email': email_split[0] if email_split else False,
+                #'email': email_split[0] if email_split else False,
                 'fax': self.fax,
                 'title': self.title.id,
                 'function': self.function,
@@ -97,18 +106,25 @@ class CrmLead(models.Model):
                 
                 'cnpj_cpf': table_infos[0],
                 'inscr_est': table_infos[1],
-                'number': table_infos[3],
-                'district': table_infos[5],
-                'street': table_infos[2],
-                'street2': table_infos[4],
+                'number': table_infos[4],
+                'district': table_infos[6],
+                'street': table_infos[3],
+                'street2': table_infos[5],
+                'zip': table_infos[2],
                 
                 'city_id': custom_city.id,
                 'country_id': custom_country.id,
                 'state_id': custom_state.id,
-                'zip': self.zip,
+                #'zip': self.zip,
                 'is_company': is_company,
                 'type': 'contact'
             }
+        
+        print ("#######################################")
+        print table_infos
+        print 
+        print ("#######################################")        
+        
         print ("##### _lead_create_contact [END] #####")
     
         return self.env['res.partner'].create(values)
@@ -140,11 +156,17 @@ class CrmLead(models.Model):
         
         user = self.env['res.users']
         
+        partner = self.env['res.partner'].browse(value.get('partner_id'))
+                
         vals = {
             'active': True,
             'login': value.get('email_from'),
             #'password': "teste",
-            'partner_id': value.get('partner_id'),
+            
+            #'partner_id': value.get('partner_id'),
+            
+            'partner_id': partner.parent_id.id,
+            
             'share': False,
             'alias_id': 1,
             'sale_team_id': 1,
@@ -160,7 +182,7 @@ class CrmLead(models.Model):
     
         user = self.env['res.users'].search([('login','=', vals['login'])])
         
-        groups_remove_acess = [1, 3, 4, 11, 12, 13, 15, 16, 25, 26, 27]
+        groups_remove_acess = [1, 3, 4, 8, 11, 12, 13, 15, 16, 21, 22, 23, 24, 25, 26, 27, 46, 47, 58]
         
         groups_grant_acess = [9]
         

@@ -42,9 +42,10 @@
                         
                         
                         <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="cnpj">CNPJ</label>
+                            <label class="col-md-3 col-sm-4 control-label" for="cnpj_cpf">CNPJ</label>
                             <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="cnpj" required="" t-att-value="request.params.get('cnpj', '')" />
+                                <input style="display:none;" type="radio" name="company_type" id="radioCompany" checked="checked"/>
+                                <input type="text" class="form-control o_website_form_input" name="cnpj_cpf" required="" t-att-value="request.params.get('cnpj', '')"/>
                             </div>
                         </div>
                         
@@ -52,6 +53,13 @@
                             <label class="col-md-3 col-sm-4 control-label" for="inscr_est">Inscrição Estadual</label>
                             <div class="col-md-7 col-sm-8">
                                 <input type="text" class="form-control o_website_form_input" name="inscr_est" required="" t-att-value="request.params.get('inscr_est', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="zip">CEP</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="zip" required="" t-att-value="request.params.get('zip', '')"/>
                             </div>
                         </div>
                         
@@ -133,10 +141,10 @@
                             </div>  
                         </div>
                         
-                        <div class="form-group form-field">
+                        <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="phone">Telefone</label>
                             <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')" />
+                                <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')"/>
                             </div>
                         </div>
                         
