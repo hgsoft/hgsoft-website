@@ -17,7 +17,7 @@
                 <div id="wrap">
                 <div class="oe_structure">
                 <div class="container">
-                    <h1>Cadastre-se para começar a comprar.</h1>
+                    <h1 style="text-align: center;">Cadastre-se para começar a comprar.</h1>
                     
                     <form action="/website_form/" method="post" 
                             class="s_website_form form-horizontal container-fluid mt32" 
@@ -91,10 +91,10 @@
                             </div>
                         </div>
                         
-                        <div class="form-group form-field o_website_form_required_custom">
+                                                <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="country_id">País</label>
                             <div class="col-md-7 col-sm-8">
-                                <select id="id_country" name="country_id" class="form-control o_website_form_input">
+                                <select id="id_country" name="country_id" style="margin-left: 0px;" class="form-group form-control o_website_form_input">
                                     <option value="">País...</option>
                                         <t t-foreach="countries or []" t-as="country">
                                             <option t-att-value="country.id" t-att-selected="country.id == False">
@@ -107,9 +107,9 @@
                         
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="state_id">Estado</label>
-                            <input id="input_state_id" type="hidden" t-att-value="state" />
+                            <input id="input_state_id" type="hidden" t-att-value="state"/>
                             <div class="col-md-7 col-sm-8">
-                                <select id="select_state_id" name="state_id" class="form-control o_website_form_input">
+                                <select id="select_state_id" name="state_id" style="margin-left: 0px;" class="form-group form-control o_website_form_input">
                                     <option value="">Estado...</option>
                                         <!--
                                         <t t-foreach="country and country.state_ids or []" t-as="s">
@@ -125,9 +125,9 @@
                         
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="state_id">Cidade</label>
-                            <input id="input_city_id" type="hidden" t-att-value="city" />
+                            <input id="input_city_id" type="hidden" t-att-value="city"/>
                             <div class="col-md-7 col-sm-8">
-                                <select id="select_city_id" name="city_id" class="form-control o_website_form_input">
+                                <select id="select_city_id" name="city_id" style="margin-left: 0px;" class="form-group form-control o_website_form_input">
                                     <option value="">Cidade...</option>
                                         <!--
                                         <t t-foreach="country and country.state_ids or []" t-as="s">

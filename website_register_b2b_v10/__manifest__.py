@@ -19,7 +19,7 @@
 ###############################################################################
 
 {
-    'name': "website_register_b2b_v11",
+    'name': "website_register_b2b_v10",
 
     'summary': """Registration form for site purchases.""",
 
