@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_website_register_b2b_v11_website_register_b2b_v11,website_register_b2b_v11.website_register_b2b_v11,model_website_register_b2b_v11_website_register_b2b_v11,,1,0,0,0

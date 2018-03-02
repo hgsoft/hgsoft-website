@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <template id="register_b2b_login" inherit_id="web.login" name="Register_b2b - Login">
+            
+            <xpath expr="//div[@class='clearfix oe_login_buttons']" position="inside">
+            
+                <a class="btn btn-info pull-right" href="/page/register">Registre-se</a>
+            
+            </xpath>
+            
+        </template>
+        
+        <template id="website.register" name="Register">
+            <t t-call="website.layout">
+                <div id="wrap">
+                <div class="oe_structure">
+                <div class="container">
+                    <h1>Cadastre-se para começar a comprar.</h1>
+                    
+                    <form action="/website_form/" method="post" 
+                            class="s_website_form form-horizontal container-fluid mt32" 
+                            enctype="multipart/form-data"
+                            data-model_name="crm.lead" 
+                            data-success_page="/page/website_crm.contactus_thanks">
+                        
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="contact_name_a">Nome</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" id="contact_name_a" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="partner_name">Empresa</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="partner_name" required="" t-att-value="request.params.get('partner_name', '')" />
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="cnpj_cpf">CNPJ</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input style="display:none;" type="radio" name="company_type" id="radioCompany" checked="checked"/>
+                                <input type="text" class="form-control o_website_form_input" name="cnpj_cpf" required="" t-att-value="request.params.get('cnpj', '')"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="inscr_est">Inscrição Estadual</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="inscr_est" required="" t-att-value="request.params.get('inscr_est', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="zip">CEP</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="zip" required="" t-att-value="request.params.get('zip', '')"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="street">Rua</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="street" required="" t-att-value="request.params.get('street', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="number">Número</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="number" required="" t-att-value="request.params.get('number', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="street2">Complemento</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="street2" required="" t-att-value="request.params.get('street2', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="district">Bairro</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="district" required="" t-att-value="request.params.get('district', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="country_id">País</label>
+                            <div class="col-md-7 col-sm-8">
+                                <select id="id_country" name="country_id" class="form-control o_website_form_input">
+                                    <option value="">País...</option>
+                                        <t t-foreach="countries or []" t-as="country">
+                                            <option t-att-value="country.id" t-att-selected="country.id == False">
+                                                <t t-esc="country.name"/>
+                                            </option>
+                                        </t>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="state_id">Estado</label>
+                            <input id="input_state_id" type="hidden" t-att-value="state" />
+                            <div class="col-md-7 col-sm-8">
+                                <select id="select_state_id" name="state_id" class="form-control o_website_form_input">
+                                    <option value="">Estado...</option>
+                                        <!--
+                                        <t t-foreach="country and country.state_ids or []" t-as="s">
+                                            <option t-att-value="s.id"
+                                                    t-att-selected="state.id == False">
+                                                <t t-esc="s.name"/>
+                                            </option>
+                                        </t>
+                                    -->
+                                </select>
+                            </div>  
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="state_id">Cidade</label>
+                            <input id="input_city_id" type="hidden" t-att-value="city" />
+                            <div class="col-md-7 col-sm-8">
+                                <select id="select_city_id" name="city_id" class="form-control o_website_form_input">
+                                    <option value="">Cidade...</option>
+                                        <!--
+                                        <t t-foreach="country and country.state_ids or []" t-as="s">
+                                            <option t-att-value="s.id"
+                                                    t-att-selected="state.id == False">
+                                                <t t-esc="s.name"/>
+                                            </option>
+                                        </t>
+                                    -->
+                                </select>
+                            </div>  
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="phone">Telefone</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="phone" t-att-value="request.params.get('phone', '')"/>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="email_from">Email</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="email_from" required="" t-att-value="request.params.get('email_from', '')" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-field o_website_form_required">
+                            <label class="col-md-3 col-sm-4 control-label" for="name">Assunto</label>
+                            <div class="col-md-7 col-sm-8">
+                                <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                            </div>
+                        </div>  
+                        
+                        <div class="form-group form-field o_website_form_required_custom">
+                            <label class="col-md-3 col-sm-4 control-label" for="description">Dúvidas</label>
+                            <div class="col-md-7 col-sm-8">
+                                <textarea class="form-control o_website_form_input" name="description" required=""><t t-esc="request.params.get('description', '')"/></textarea>
+                            </div>
+                        </div>
+                        
+                        <t t-foreach="kwargs" t-as="kwarg">
+                            <input type="hidden" t-att-name="kwarg[0]" t-att-value="kwarg[1]"/>
+                        </t>
+                        
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                <span class="btn btn-primary btn-lg o_website_form_send">Enviar</span>
+                                <span id="o_website_form_result"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                </div>
+                </div>
+            </t>      
+        </template>
+    </data>
+</odoo>
