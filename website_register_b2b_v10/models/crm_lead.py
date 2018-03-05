@@ -7,6 +7,37 @@ import re
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
+    
+    @api.multi
+    def handle_partner_assignation(self,  action='create', partner_id=False):
+        
+        print ("##### handle_partner_assignation [START] #####")
+        
+        """ Handle partner assignation during a lead conversion.
+            if action is 'create', create new partner with contact and assign lead to new partner_id.
+            otherwise assign lead to the specified partner_id
+
+            :param list ids: leads/opportunities ids to process
+            :param string action: what has to be done regarding partners (create it, assign an existing one, or nothing)
+            :param int partner_id: partner to assign if any
+            :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
+        """
+        partner_ids = {}
+        for lead in self:
+            if lead.partner_id:
+                partner_ids[lead.id] = lead.partner_id.id
+                continue
+            if action == 'create' or action == 'create_both':
+                partner = lead._create_lead_partner()
+                partner_id = partner.id
+                partner.team_id = lead.team_id
+            if partner_id:
+                lead.partner_id = partner_id
+            partner_ids[lead.id] = partner_id
+        
+        print ("##### handle_partner_assignation [END] #####")
+        
+        return partner_ids
         
     @api.multi
     def _lead_create_contact(self, name, is_company, parent_id=False):
@@ -120,19 +151,14 @@ class CrmLead(models.Model):
                 'type': 'contact'
             }
         
-        print ("#######################################")
-        print table_infos
-        print 
-        print ("#######################################")        
-        
         print ("##### _lead_create_contact [END] #####")
     
         return self.env['res.partner'].create(values)
     
     @api.multi
-    def _convert_opportunity_data(self, customer, team_id=False):
+    def _convert_opportunity_data(self, action, customer, team_id=False):
         print ("##### _convert_opportunity_data [START] #####")
-      
+        
         if not team_id:
             team_id = self.team_id.id if self.team_id else False
         value = {
@@ -152,53 +178,48 @@ class CrmLead(models.Model):
             if stage:
                 value['probability'] = stage.probability
         
-        print ("##### create_user [START] #####")
+        if action == 'create_both':
         
-        user = self.env['res.users']
-        
-        partner = self.env['res.partner'].browse(value.get('partner_id'))
-                
-        vals = {
-            'active': True,
-            'login': value.get('email_from'),
-            #'password': "teste",
+            print ("##### create_user [START] #####")
             
-            #'partner_id': value.get('partner_id'),
+            user = self.env['res.users']
             
-            'partner_id': partner.parent_id.id,
+            partner = self.env['res.partner'].browse(value.get('partner_id'))
+                    
+            vals = {
+                'active': True,
+                'login': value.get('email_from'),
+                'partner_id': partner.parent_id.id,
+                'share': False,
+                'alias_id': 1,
+                'sale_team_id': 1,
+                #'password': "teste",
+                #'partner_id': value.get('partner_id'),
+            }
             
-            'share': False,
-            'alias_id': 1,
-            'sale_team_id': 1,
+            user.create(vals)
             
-            #active, login, password, company_id, partner_id,
-            #share, alias_id, sale_team_id
+            print ("##### groups_write [START] #####")
+        
+            user = self.env['res.users'].search([('login','=', vals['login'])])
             
-        }
-        
-        user.create(vals)
-        
-        print ("##### groups_write [START] #####")
-    
-        user = self.env['res.users'].search([('login','=', vals['login'])])
-        
-        groups_remove_acess = [1, 3, 4, 8, 11, 12, 13, 15, 16, 21, 22, 23, 24, 25, 26, 27, 46, 47, 58]
-        
-        groups_grant_acess = [9]
-        
-        for x in groups_remove_acess:
-            group = self.env['res.groups'].search([('id','=', x)])
+            groups_remove_acess = [1, 3, 4, 8, 11, 12, 13, 15, 16, 21, 22, 23, 24, 25, 26, 27, 46, 47, 58]
+            
+            groups_grant_acess = [9]
+            
+            for x in groups_remove_acess:
+                group = self.env['res.groups'].search([('id','=', x)])
 
-            group.write({'users': [(3, user.id)]})
-        
-        for y in groups_grant_acess:
-            group = self.env['res.groups'].search([('id','=', y)])
-        
-            group.write({'users': [(4, user.id)]})
-        
-        print ("##### groups_write [END] #####")
-        
-        print ("##### create_user [END] #####")
+                group.write({'users': [(3, user.id)]})
+            
+            for y in groups_grant_acess:
+                group = self.env['res.groups'].search([('id','=', y)])
+            
+                group.write({'users': [(4, user.id)]})
+            
+            print ("##### groups_write [END] #####")
+            
+            print ("##### create_user [END] #####")
         
         print ("##### _convert_opportunity_data [END] #####")
        
@@ -206,7 +227,7 @@ class CrmLead(models.Model):
     
     
     @api.multi
-    def convert_opportunity(self, partner_id, user_ids=False, team_id=False):
+    def convert_opportunity(self, action, partner_id, user_ids=False, team_id=False):
         print ("##### convert_opportunity [START] #####")
         
         customer = False
@@ -216,7 +237,7 @@ class CrmLead(models.Model):
         for lead in self:
             if not lead.active or lead.probability == 100:
                 continue
-            vals = lead._convert_opportunity_data(customer, team_id)
+            vals = lead._convert_opportunity_data(action, customer, team_id)
             lead.write(vals)
 
         if user_ids or team_id:
@@ -225,18 +246,62 @@ class CrmLead(models.Model):
         print ("##### convert_opportunity [END] #####")
         
         return True
-    """
+    
 class Lead2OpportunityMassConvert(models.TransientModel):
     _inherit = 'crm.partner.binding'
-    
+
     action = fields.Selection([
+        ('create_both', 'Create a new customer with user'),
         ('exist', 'Link to an existing customer'),
         ('create', 'Create a new customer'),
-        ('create_both', 'Create a new customer and user'),
+        ('nothing', 'Do not link to a customer')
+    ], 'Related Customer', required=True, default=lambda self: self._context.get('action', 'create_both'))
+
+    """
+    action = fields.Selection([
+        ('create_both', 'Create a new customer with user'),
+        ('exist', 'Link to an existing customer'),
+        ('create', 'Create a new customer'),
         ('nothing', 'Do not link to a customer')
     ], 'Related Customer', required=True)
-    
     """
+    
+    #####
+    
+class Lead2OpportunityMassConvert(models.TransientModel):
+    _inherit = 'crm.lead2opportunity.partner'
+
+    @api.multi
+    def _convert_opportunity(self, vals):
+        print ("##### _convert_opportunity [ACTION] [START] #####")
+
+        
+        
+        self.ensure_one()
+
+        res = False
+
+        leads = self.env['crm.lead'].browse(vals.get('lead_ids'))
+        for lead in leads:
+            self_def_user = self.with_context(default_user_id=self.user_id.id)
+            partner_id = self_def_user._create_partner(
+                lead.id, self.action, vals.get('partner_id') or lead.partner_id.id)
+            res = lead.convert_opportunity(self.action, partner_id, [], False)
+        user_ids = vals.get('user_ids')
+
+        leads_to_allocate = leads
+        if self._context.get('no_force_assignation'):
+            leads_to_allocate = leads_to_allocate.filtered(lambda lead: not lead.user_id)
+
+        if user_ids:
+            leads_to_allocate.allocate_salesman(user_ids, team_id=(vals.get('team_id')))
+
+        print ("##### _convert_opportunity [ACTION] [END] #####")
+        
+        return res
+    
+    #####
+    
     """
     
     #####

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <odoo>
+    <record id="website_register_b2b_lead" model="ir.ui.view">
+        <field name="name">website.register.b2b.lead</field>        
+        <field name="model">crm.lead2opportunity.partner</field>
+        <field name="inherit_id" ref="crm.view_crm_lead2opportunity_partner"/>
+        <field name="arch" type="xml">         
+            <xpath expr="//form/group[4]/field" position="replace">
+                <field name="action" class="oe_inline" widget="radio" context="{'default_action': 'create_both'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -44,7 +44,7 @@
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="cnpj_cpf">CNPJ</label>
                             <div class="col-md-7 col-sm-8">
-                                <input style="display:none;" type="radio" name="company_type" id="radioCompany" checked="checked"/>
+                                <input style="display:none;" type="radio" id="radioCompany" checked="checked"/>
                                 <input type="text" class="form-control o_website_form_input" name="cnpj_cpf" required="" t-att-value="request.params.get('cnpj', '')"/>
                             </div>
                         </div>
