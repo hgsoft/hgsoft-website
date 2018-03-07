@@ -46,9 +46,9 @@ class CrmLead(models.Model):
         
         #Nomes dos campos a serem separados e preenchidos.
         
-        #key_word = ["cnpj : ", "inscr_est : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+        #key_word = ["cnpj_cpf : ", "inscr_est : ", "zip : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
 
-        key_word = ["cnpj_cpf : ", "inscr_est : ", "zip : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+        key_word = ["company_type : ", "cnpj_cpf : ", "zip : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
 
         table_infos = []
         
@@ -56,10 +56,14 @@ class CrmLead(models.Model):
         
         if not isinstance(custom_infos, bool):
             custom_infos = custom_infos.replace("\n", " ")
-            
-            #Quantidade de campos a serem separados e preenchidos.
-            
-            FIELDS_QTY = 10;
+
+            #Adiciona o campo inscr_est caso seja uma pessoa jurídica, e altera os campos a serem separados.
+            if "company_type : person" not in custom_infos:
+                key_word.insert(2, "inscr_est : ")
+                                
+                FIELDS_QTY = 11
+            else:
+                FIELDS_QTY = 10;
             
             for x in range(FIELDS_QTY):
 
@@ -91,10 +95,6 @@ class CrmLead(models.Model):
         
         email_split = tools.email_split(self.email_from)
         
-        custom_country = self.env['res.country'].search([('id','=', int(table_infos[7]))])
-        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[8]))])
-        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[9]))])
-        
         if not is_company:
             values = {
                 'name': name,
@@ -104,10 +104,13 @@ class CrmLead(models.Model):
                 'parent_id': parent_id,
                 'phone': self.phone,
                 'mobile': self.mobile,
+                
                 #'email': email_split[0] if email_split else False,
+                
                 'fax': self.fax,
                 'title': self.title.id,
                 'function': self.function,
+                
                 'street': self.street,
                 'street2': self.street2,
                 'zip': self.zip,
@@ -119,38 +122,88 @@ class CrmLead(models.Model):
             }
         
         if is_company:
-            self.cnpj = table_infos[0]
-            
-            self.inscr_est = table_infos[1]
-            
-            values = {
-                'name': name,
-                'user_id': self.env.context.get('default_user_id') or self.user_id.id,
-                'comment': self.description,
-                'team_id': self.team_id.id,
-                'parent_id': parent_id,
-                'phone': self.phone,
-                'mobile': self.mobile,
-                'email': email_split[0] if email_split else False,
-                'fax': self.fax,
-                'title': self.title.id,
-                'function': self.function,
+            if "company" in table_infos[0]:
+                custom_country = self.env['res.country'].search([('id','=', int(table_infos[8]))])
                 
-                'cnpj_cpf': table_infos[0],
-                'inscr_est': table_infos[1],
-                'number': table_infos[4],
-                'district': table_infos[6],
-                'street': table_infos[3],
-                'street2': table_infos[5],
-                'zip': table_infos[2],
+                custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[9]))])
                 
-                'city_id': custom_city.id,
-                'country_id': custom_country.id,
-                'state_id': custom_state.id,
-                #'zip': self.zip,
-                'is_company': is_company,
-                'type': 'contact'
-            }
+                custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[10]))])
+                
+                #self.cnpj = table_infos[0]
+                
+                #self.inscr_est = table_infos[1]
+                
+                values = {
+                    'name': name,
+                    'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+                    'comment': self.description,
+                    'team_id': self.team_id.id,
+                    'parent_id': parent_id,
+                    'phone': self.phone,
+                    'mobile': self.mobile,
+                    
+                    'email': email_split[0] if email_split else False,
+                    
+                    'fax': self.fax,
+                    'title': self.title.id,
+                    'function': self.function,
+                    
+                    'cnpj_cpf': table_infos[1],
+                    'inscr_est': table_infos[2],
+                    'zip': table_infos[3],
+                    'street': table_infos[4],
+                    'number': table_infos[5],
+                    'street2': table_infos[6],
+                    'district': table_infos[7],
+                    
+                    'city_id': custom_city.id,
+                    'country_id': custom_country.id,
+                    'state_id': custom_state.id,
+                    #'zip': self.zip,
+                    'is_company': is_company,
+                    'type': 'contact'
+                }
+            elif "person" in table_infos[0]:
+                custom_country = self.env['res.country'].search([('id','=', int(table_infos[7]))])
+                
+                custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[8]))])
+                
+                custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[9]))])
+                
+                #self.cnpj = table_infos[0]
+                
+                #self.inscr_est = table_infos[1]
+                
+                values = {
+                    'name': name,
+                    'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+                    'comment': self.description,
+                    'team_id': self.team_id.id,
+                    'parent_id': parent_id,
+                    'phone': self.phone,
+                    'mobile': self.mobile,
+                    
+                    'email': email_split[0] if email_split else False,
+                    
+                    'fax': self.fax,
+                    'title': self.title.id,
+                    'function': self.function,
+                    
+                    'cnpj_cpf': table_infos[1],
+                    #'inscr_est': table_infos[2],
+                    'zip': table_infos[2],
+                    'street': table_infos[3],
+                    'number': table_infos[4],
+                    'street2': table_infos[5],
+                    'district': table_infos[6],
+                    
+                    'city_id': custom_city.id,
+                    'country_id': custom_country.id,
+                    'state_id': custom_state.id,
+                    #'zip': self.zip,
+                    'is_company': False,
+                    'type': 'contact'
+                }
         
         print ("##### _lead_create_contact [END] #####")
     
