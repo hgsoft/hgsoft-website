@@ -82,8 +82,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-05 18:51+0000\n"
-"PO-Revision-Date: 2018-03-05 18:51+0000\n"
+"POT-Creation-Date: 2018-03-06 12:58+0000\n"
+"PO-Revision-Date: 2018-03-06 12:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24633,14 +24633,14 @@ msgstr "Crie algumas oportunidades nele."
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
-msgid "Create a new customer"
-msgstr "Criar um novo cliente"
+msgid "Create a new customer with user"
+msgstr "Criar um novo cliente com usuário"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.partner.binding,action:0
-msgid "Create a new customer with user"
-msgstr "Criar um novo cliente com usuário"
+msgid "Create a new customer without user"
+msgstr "Criar um novo cliente sem usuário"
 
 #. module: base
 #: selection:ir.actions.server,use_create:0
@@ -28703,9 +28703,7 @@ msgid "Do not keep a copy of the email in the document communication history (ma
 msgstr "Do not keep a copy of the email in the document communication history (mass mailing only)"
 
 #. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
-#: selection:crm.partner.binding,action:0
 msgid "Do not link to a customer"
 msgstr "Não associe a um cliente"
 
@@ -41125,12 +41123,6 @@ msgstr "Link my Analytics Account"
 msgid "Link to"
 msgstr "Vínculo para"
 
-#. module: crm
-#: selection:crm.lead2opportunity.partner,action:0
-#: selection:crm.partner.binding,action:0
-msgid "Link to an existing customer"
-msgstr "Conectar a um cliente existente"
-
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_move_id
 msgid "Link to the automatically generated Journal Items."
@@ -42619,9 +42611,8 @@ msgstr "Martinica (França)"
 msgid "Masonry"
 msgstr "Alvenaria"
 
-#. modules: website_register_b2b_v10, crm
+#. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
-#: model:ir.model,name:website_register_b2b_v10.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
 msgstr "Prospectos para Oportunidades  em lote"
 
@@ -43068,12 +43059,6 @@ msgstr "Juntar com Verificação Manual"
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass_deduplicate
 msgid "Merge with existing leads/opportunities of each partner"
 msgstr "Mesclar com prospectos/oportunidades existentes de cada parceiro"
-
-#. module: crm
-#: selection:crm.lead2opportunity.partner,name:0
-#: selection:crm.lead2opportunity.partner.mass,name:0
-msgid "Merge with existing opportunities"
-msgstr "Mesclar com uma oportunidade existente"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:501

@@ -54,25 +54,26 @@ class CrmLead(models.Model):
         
         custom_infos = self.description
         
-        custom_infos = custom_infos.replace("\n", " ")
-        
-        #Quantidade de campos a serem separados e preenchidos.
-        
-        FIELDS_QTY = 10;
-        
-        for x in range(FIELDS_QTY):
+        if not isinstance(custom_infos, bool):
+            custom_infos = custom_infos.replace("\n", " ")
+            
+            #Quantidade de campos a serem separados e preenchidos.
+            
+            FIELDS_QTY = 10;
+            
+            for x in range(FIELDS_QTY):
 
-            if x < len(key_word)-1:
-                matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
-            else:
-                matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
+                if x < len(key_word)-1:
+                    matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+                else:
+                    matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
 
-            temp = re.sub(".*" + key_word[x], "", matches.group())
+                temp = re.sub(".*" + key_word[x], "", matches.group())
 
-            if x < len(key_word)-1:
-                temp = re.sub(key_word[x+1], "", temp)
+                if x < len(key_word)-1:
+                    temp = re.sub(key_word[x+1], "", temp)
 
-            table_infos.append(temp)
+                table_infos.append(temp)
 
         """
         table_infos
@@ -252,9 +253,7 @@ class Lead2OpportunityMassConvert(models.TransientModel):
 
     action = fields.Selection([
         ('create_both', 'Create a new customer with user'),
-        ('exist', 'Link to an existing customer'),
-        ('create', 'Create a new customer'),
-        ('nothing', 'Do not link to a customer')
+        ('create', 'Create a new customer without user'),
     ], 'Related Customer', required=True, default=lambda self: self._context.get('action', 'create_both'))
 
     """
@@ -270,6 +269,10 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     
 class Lead2OpportunityMassConvert(models.TransientModel):
     _inherit = 'crm.lead2opportunity.partner'
+
+    name = fields.Selection([
+        ('convert', 'Convert to opportunity'),
+    ], 'Conversion Action', required=True)
 
     @api.multi
     def _convert_opportunity(self, vals):
