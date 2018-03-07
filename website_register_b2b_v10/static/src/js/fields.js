@@ -5,11 +5,13 @@ function radioIsCompany() {
         
         document.getElementById("company").required = true;
         
+        document.getElementById("company").value = "";
+        
         document.getElementById('hasInsc_est').style.display = 'block';
         
         document.getElementById("insc_est").required = true;
         
-        document.getElementById("company").value = "";
+        document.getElementById("insc_est").value = "";
         
     } else {
         document.getElementById('isCompany').style.display = 'None';

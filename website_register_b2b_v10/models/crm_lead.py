@@ -7,6 +7,47 @@ import re
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
+
+    @api.multi
+    def _create_lead_partner(self):
+        
+        print ("##### _create_lead_partner [START] #####")
+        
+        """ Create a partner from lead data
+            :returns res.partner record
+        """
+        contact_name = self.contact_name
+        
+        if not contact_name:
+            contact_name = self.env['res.partner']._parse_partner_name(self.email_from)[0] if self.email_from else False
+        
+        if self.partner_name:
+            
+            print ("##### A #####")
+            
+            partner_company = self._lead_create_contact(self.partner_name, True)
+            
+            print("##########");
+            print(partner_company);
+            print("##########");
+            
+        elif self.partner_id:
+            partner_company = self.partner_id
+            
+        else:
+            partner_company = None
+            
+        if contact_name and "company_type : person" not in self.description:
+            
+            print ("##### B #####")
+            
+            return self._lead_create_contact(contact_name, False, partner_company.id if partner_company else False)
+            
+        if partner_company:
+            
+            return partner_company
+        
+        return self._lead_create_contact(self.name, False)
     
     @api.multi
     def handle_partner_assignation(self,  action='create', partner_id=False):
@@ -29,8 +70,9 @@ class CrmLead(models.Model):
                 continue
             if action == 'create' or action == 'create_both':
                 partner = lead._create_lead_partner()
-                partner_id = partner.id
-                partner.team_id = lead.team_id
+                if partner:
+                    partner_id = partner.id
+                    partner.team_id = lead.team_id
             if partner_id:
                 lead.partner_id = partner_id
             partner_ids[lead.id] = partner_id
@@ -96,31 +138,34 @@ class CrmLead(models.Model):
         email_split = tools.email_split(self.email_from)
         
         if not is_company:
-            values = {
-                'name': name,
-                'user_id': self.env.context.get('default_user_id') or self.user_id.id,
-                'comment': self.description,
-                'team_id': self.team_id.id,
-                'parent_id': parent_id,
-                'phone': self.phone,
-                'mobile': self.mobile,
-                
-                #'email': email_split[0] if email_split else False,
-                
-                'fax': self.fax,
-                'title': self.title.id,
-                'function': self.function,
-                
-                'street': self.street,
-                'street2': self.street2,
-                'zip': self.zip,
-                'city': self.city,
-                'country_id': self.country_id.id,
-                'state_id': self.state_id.id,
-                'is_company': is_company,
-                'type': 'contact'
-            }
-        
+            if "company" in table_infos[0]:
+                values = {
+                    'name': name,
+                    'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+                    'comment': self.description,
+                    'team_id': self.team_id.id,
+                    'parent_id': parent_id,
+                    'phone': self.phone,
+                    'mobile': self.mobile,
+                    
+                    #'email': email_split[0] if email_split else False,
+                    
+                    'fax': self.fax,
+                    'title': self.title.id,
+                    'function': self.function,
+                    
+                    'street': self.street,
+                    'street2': self.street2,
+                    'zip': self.zip,
+                    'city': self.city,
+                    'country_id': self.country_id.id,
+                    'state_id': self.state_id.id,
+                    'is_company': is_company,
+                    'type': 'contact'
+                }
+            else:
+                values = {};
+                    
         if is_company:
             if "company" in table_infos[0]:
                 custom_country = self.env['res.country'].search([('id','=', int(table_infos[8]))])
@@ -141,6 +186,7 @@ class CrmLead(models.Model):
                     'parent_id': parent_id,
                     'phone': self.phone,
                     'mobile': self.mobile,
+                    'legal_name': self.name,
                     
                     'email': email_split[0] if email_split else False,
                     
@@ -206,8 +252,11 @@ class CrmLead(models.Model):
                 }
         
         print ("##### _lead_create_contact [END] #####")
-    
-        return self.env['res.partner'].create(values)
+        
+        if values:
+            return self.env['res.partner'].create(values);
+        else :
+            return False;
     
     @api.multi
     def _convert_opportunity_data(self, action, customer, team_id=False):
@@ -236,20 +285,34 @@ class CrmLead(models.Model):
         
             print ("##### create_user [START] #####")
             
+            print("### A ###");
+            
             user = self.env['res.users']
             
+            print(user);
+            
+            print("### B ###");
+            
             partner = self.env['res.partner'].browse(value.get('partner_id'))
+                    
+            print(partner);
+                    
+            print("### C ###");
                     
             vals = {
                 'active': True,
                 'login': value.get('email_from'),
-                'partner_id': partner.parent_id.id,
+                'partner_id': partner.parent_id.id or partner.id,
                 'share': False,
                 'alias_id': 1,
                 'sale_team_id': 1,
                 #'password': "teste",
                 #'partner_id': value.get('partner_id'),
             }
+            
+            print(vals);
+            
+            print("### D ###");
             
             user.create(vals)
             
