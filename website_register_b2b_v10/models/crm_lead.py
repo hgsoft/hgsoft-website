@@ -7,6 +7,36 @@ import re
 
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
+    
+    ###
+    
+    @api.model
+    def create(self, vals):
+        rec = super(CrmLead, self).create(vals)
+        
+        ###  
+        
+        print ("##### create [START] #####")
+        
+        print(rec)
+        
+        print(vals)
+        
+        
+        if vals["description"]:
+            if "Custom infos" and "___________" in vals["description"]:
+                print("##### Lead from [Website] #####")
+                
+            else:
+                print("##### Lead from [Backend] #####")
+        
+        print ("##### create [END] #####")
+        
+        ###
+        
+        return rec
+
+    ###
 
     @api.multi
     def _create_lead_partner(self):

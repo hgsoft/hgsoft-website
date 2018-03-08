@@ -42,17 +42,23 @@
                                 <input type="text" class="form-control o_website_form_input" id="contact_name_a" name="contact_name" t-att-value="request.params.get('contact_name', '')" required=""/>
                             </div>
                         </div>
-                        
+                                                
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label">Tipo de Pessoa</label>
                             <div class="col-md-7 col-sm-8">
                                 <div class="col-xs-6 col-sm-3">
-                                    <input class="form-control o_website_form_input" style="vertical-align:middle; display:inline; margin-left: -25px;" 
-                                    onclick="javascript:radioIsCompany();" value="company" name="company_type" type="radio" id="radioCompany"/> Pessoa Jurídica
+                                    <label>
+                                        <input id="radioCompany" name="company_type" type="radio" value="company" onclick="javascript:radioIsCompany();" 
+                                        style="-webkit-appearance: radio; display:inline; margin-left: -25px; margin-left: -25px;"/>
+                                        Pessoa Jurídica
+                                    </label>
                                 </div>
                                 <div class="col-xs-6 col-sm-3">
-                                    <input class="form-control o_website_form_input" style="vertical-align:middle; display:inline; margin-left: -25px;"
-                                    onclick="javascript:radioIsCompany();" value="person" name="company_type" type="radio" id="radioPerson"/> Pessoa Física
+                                    <label>
+                                        <input id="radioPerson" name="company_type" type="radio" value="person" onclick="javascript:radioIsCompany();"
+                                        style="-webkit-appearance: radio; display:inline; margin-left: -25px; margin-left: -25px;"/>
+                                        Pessoa Física
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +95,7 @@
                         </div>
                         
                         <div class="form-group form-field o_website_form_required_custom">
-                            <label class="col-md-3 col-sm-4 control-label" for="street">Rua</label>
+                            <label class="col-md-3 col-sm-4 control-label" for="street">Endereço</label>
                             <div class="col-md-7 col-sm-8">
                                 <input type="text" class="form-control o_website_form_input" name="street" required="" t-att-value="request.params.get('street', '')" />
                             </div>
@@ -105,7 +111,7 @@
                         <div class="form-group form-field o_website_form_required_custom">
                             <label class="col-md-3 col-sm-4 control-label" for="street2">Complemento</label>
                             <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="street2" required="" t-att-value="request.params.get('street2', '')" />
+                                <input type="text" class="form-control o_website_form_input" name="street2" id="street2" t-att-value="request.params.get('street2', '')" />
                             </div>
                         </div>
                         
@@ -180,10 +186,10 @@
                             </div>
                         </div>
                         
-                        <div class="form-group form-field o_website_form_required">
+                        <div style="display: none;" class="form-group form-field o_website_form_required">
                             <label class="col-md-3 col-sm-4 control-label" for="name">Assunto</label>
                             <div class="col-md-7 col-sm-8">
-                                <input type="text" class="form-control o_website_form_input" name="name" required="" t-att-value="request.params.get('name', '')" />
+                                <input type="text" class="form-control o_website_form_input" name="name" id="subject" t-att-value="request.params.get('name', '')" />
                             </div>
                         </div>  
                         

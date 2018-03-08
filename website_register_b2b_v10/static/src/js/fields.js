@@ -34,4 +34,14 @@ function submitFormCheck() {
         document.getElementById("insc_est").value = "";
         
     }
+    
+    if (document.getElementById("street2").value == "") {
+    
+        document.getElementById("street2").value = " "
+        
+    }
+    
+    
+    document.getElementById("subject").value = "Novo Usuário - Website";
+    
 }
