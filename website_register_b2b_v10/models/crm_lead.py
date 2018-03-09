@@ -10,33 +10,111 @@ class CrmLead(models.Model):
     
     ###
     
-    @api.model
-    def create(self, vals):
-        rec = super(CrmLead, self).create(vals)
+    @api.multi
+    def write(self, vals):
+        print ("##### write [START] #####")
         
-        ###  
+        # stage change: update date_last_stage_update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.Datetime.now()
+        if vals.get('user_id') and 'date_open' not in vals:
+            vals['date_open'] = fields.Datetime.now()
+        # stage change with new stage: update probability and date_closed
+        if vals.get('stage_id') and 'probability' not in vals:
+            vals.update(self._onchange_stage_id_values(vals.get('stage_id')))
+        if vals.get('probability') >= 100 or not vals.get('active', True):
+            vals['date_closed'] = fields.Datetime.now()
+        elif 'probability' in vals and vals['probability'] < 100:
+            vals['date_closed'] = False
+
+        print ("##### valsCustom [START] #####")
+
+        if 'description' in vals:
+            if "Custom infos" and "___________" in vals["description"]:
+                print("##### Lead from [Website] #####")
+
+                key_word = ["company_type : ", "cnpj_cpf : ", "zip : ", "street : ", "number : ", "street2 : ", "district : ", "country_id : ", "state_id : ", "city_id : "]
+
+                table_infos = []
+                
+                custom_infos = vals["description"]
+                
+                if not isinstance(custom_infos, bool):
+                    custom_infos = custom_infos.replace("\n", " ")
+
+                    if "company_type : person" not in custom_infos:
+                        key_word.insert(2, "inscr_est : ")
+                                        
+                        FIELDS_QTY = 11
+                    else:
+                        FIELDS_QTY = 10;
+                    
+                    for x in range(FIELDS_QTY):
+
+                        if x < len(key_word)-1:
+                            matches = re.compile(".*" + key_word[x] + "" + ".*\s" + key_word[x+1]).match(custom_infos)
+                        else:
+                            matches = re.compile(".*" + key_word[x] + "" + ".*").match(custom_infos)
+
+                        temp = re.sub(".*" + key_word[x], "", matches.group())
+
+                        if x < len(key_word)-1:
+                            temp = re.sub(key_word[x+1], "", temp)
+
+                        table_infos.append(temp)
+                    
+
+                    if "company" in table_infos[0]:
+                        custom_country = self.env['res.country'].search([('id','=', int(table_infos[8]))])
+                        
+                        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[9]))])
+                        
+                        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[10]))])
+                        
+                        valsCustom = {
+                            
+                            'zip' : table_infos[3],
+                            'street' : table_infos[4],
+                            'street2' : table_infos[6],
+                            'city' : custom_city.name,
+                            'state_id' : custom_state.id,
+                            'country_id' : custom_country.id
+                            
+                            }
+                    
+                    elif "person" in table_infos[0]:
+                        custom_country = self.env['res.country'].search([('id','=', int(table_infos[7]))])
+                        custom_state = self.env['res.country.state'].search([('id','=', int(table_infos[8]))])
+                        custom_city = self.env['res.state.city'].search([('id','=', int(table_infos[9]))])
+                        
+                        valsCustom = {
+                            
+                            'zip' : table_infos[2],
+                            'street' : table_infos[3],
+                            'street2' : table_infos[5],
+                            'city' : custom_city.name,
+                            'state_id' : custom_state.id,
+                            'country_id' : custom_country.id
+                            
+                            }
+                        
+                    super(CrmLead, self).write(valsCustom)
+
+            else:
+                print("##### Lead from [Backend] #####")
+                
+        else:
+            print("##### Lead from [Backend] #####")
         
-        print ("##### create [START] #####")
-        
-        print(rec)
+        print ("##### valsCustom [END] #####")
         
         print(vals)
         
+        print ("##### write [END] #####")
         
-        if vals["description"]:
-            if "Custom infos" and "___________" in vals["description"]:
-                print("##### Lead from [Website] #####")
-                
-            else:
-                print("##### Lead from [Backend] #####")
-        
-        print ("##### create [END] #####")
-        
-        ###
-        
-        return rec
+        return super(CrmLead, self).write(vals)
 
-    ###
+    ###########################################
 
     @api.multi
     def _create_lead_partner(self):
