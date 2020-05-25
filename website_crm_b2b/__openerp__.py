@@ -10,9 +10,10 @@ OpenERP Contact Form
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website_partner', 'crm','l10n_br_crm'],
+    #'depends': ['website_partner', 'crm','l10n_br_crm'],
+    'depends': ['website_partner', 'crm','br_crm'],
     'data': [
-        'data/website_crm_data.xml',
+        #'data/website_crm_data.xml',
         'views/website_crm.xml',
     ],
     'installable': True,

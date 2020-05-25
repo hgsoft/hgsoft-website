@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
+<odoo>
+    <data>
 
-<template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
-    <xpath expr="//div[@name='mail_button']" position="replace">
+<!--
+<template id="contactus_form" name="Contact Form" inherit_id="website_crm.contactus_form" customize_show="True">
+    <xpath expr="//form" position="replace">
         <form action="/crm/contactus" method="post" class="form-horizontal mt32" enctype="multipart/form-data">
             <div t-attf-class="form-group #{error and 'contact_name' in error and 'has-error' or ''}">
                 <label class="col-md-3 col-sm-4 control-label" for="contact_name">Your Name</label>
@@ -47,7 +48,9 @@
         </form>
     </xpath>
 </template>
+-->
 
+<!-- 
 <template id="contactus_form_company_name" name="Company Name" inherit_id="website_crm.contactus_form" customize_show="True">
     <xpath expr="//div[@name='email_from_container']" position="after">
         <div t-attf-class="form-group #{error and 'partner_name' in error and 'has-error' or ''}">
@@ -58,8 +61,8 @@
         </div>
     </xpath>
 </template>
-
-
+-->
+<!--
 <template id="contactus_form_company_cnpj_cpf" name="CNPJ_CPF" inherit_id="website_crm.contactus_form" customize_show="True">
     <xpath expr="//div[@name='email_from_container']" position="after">
         <div t-attf-class="form-group #{error and 'cnpj' in error and 'has-error' or ''}">
@@ -126,6 +129,7 @@
         </div>
     </xpath>
 </template>
+        -->
 
 <template id="contactus_thanks" name="Contact us">
     <t t-call="website.layout">
@@ -160,4 +164,4 @@
 </template>
 
 </data>
-</openerp>
+</odoo>

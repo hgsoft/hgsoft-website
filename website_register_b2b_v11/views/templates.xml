@@ -12,7 +12,7 @@
             
         </template>
         
-        <template id="website.register" name="Register">
+        <template id="website.register" name="Register_b2b - Register">
             <t t-call="website.layout">
                 <div id="wrap">
                 <div class="oe_structure">

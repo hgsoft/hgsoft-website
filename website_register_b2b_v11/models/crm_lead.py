@@ -121,7 +121,7 @@ class CrmLead(models.Model):
             }
         
         print ("#######################################")
-        print table_infos
+        print (table_infos)
         print 
         print ("#######################################")        
         
