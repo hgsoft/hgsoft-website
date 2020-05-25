@@ -85,5 +85,40 @@
                 </form>
             </xpath>
         </template>
+        <template id="custom_product_configurator" inherit_id="website_product_configurator.product_configurator">
+            <xpath expr="//div[@class='config_price']" position="replace">
+                <div class="config_price" t-if="not user_id.partner_id.name == 'Public user'">
+                    <span>
+                        <b>Preço: </b>
+                    </span>
+                    <span class="config_product_price" t-esc="cfg_session.price" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id}"/>
+                </div>
+            </xpath>
+        </template>
+        <template id="custom_product_configurator_form_select" inherit_id="website_product_configurator.config_form_select">
+            <xpath expr="//select" position="replace">
+                <select t-att-id="'%s%s' % (field_prefix, line.attribute_id.id)" t-att-data-oe-id="line.attribute_id.id" t-att-data-attr-required="line.required" t-att-multiple="'multiple' if line.multi else None" t-att-name="'%s%s' % (field_prefix, line.attribute_id.id)" t-att-class="'form-control config_attribute' + (' required_config_attrib' if available_val and line.required else '')" t-att-data-old-val-id="(value_ids &amp; line.value_ids) and (value_ids &amp; line.value_ids).ids[0] or ''">
+                <!-- t-att-disabled="'disabled' if not available_val_ids and not line.custom else None" -->
+                    <option name=""/>
+                    <t t-foreach="line.value_ids" t-as="value">
+                        <option t-att-selected="'selected' if value.id in value_ids.ids else None" t-att-class="'config_attr_value' + (' disabled' if value.id not in available_value_ids else '')" t-att-value="value.id" t-att-data-oe-id="value.id" t-att-name="value.id" t-att-disabled="value.id not in available_value_ids and True or False">
+                            <t t-if="user_id.partner_id.name == 'Public user'" t-esc="value.get_attr_value_name_hide_price(product_tmpl, pricelist.id)[0][1]"/>
+                            <t t-else="" t-esc="value.get_attr_value_name(product_tmpl, pricelist.id)[0][1]"/>
+                        </option>
+                        </t>
+                        <t t-if="line.custom">
+                            <option t-att-selected="'selected' if custom_value else None" t-att-class="'config_attr_value custom_config_attr_value' + (' disabled' if custom_val_id.id not in available_value_ids else '')" t-att-value="custom_val_id.id" t-att-data-oe-id="custom_val_id.id" t-att-name="custom_val_id.id" t-att-disabled="custom_val_id.id not in available_value_ids and True or False">
+                                <t t-esc="custom_val_id.name"/>
+                            </option>
+                        </t>
+                </select>
+            </xpath>
+        </template>
+        <!--
+        <template id="custom_product_configurator_form_radio" inherit_id="website_product_configurator_v11.config_form_radio">
+            <xpath expr="//div[@class='config_price']" position="replace">
+            </xpath>
+        </template>
+        -->
     </data>
 </openerp>

@@ -15,6 +15,7 @@
     'category': 'website',
     'version': '10.0.2',
     'depends': ['base','website_sale','website_register_b2b_v11'],
+    #'depends': ['base','website_sale'],
     'data': [
         'templates.xml',
     ],
