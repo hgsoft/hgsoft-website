@@ -114,6 +114,11 @@
                 </select>
             </xpath>
         </template>
+        <template id="custom_product_configurator_cfg_product_variant" inherit_id="website_product_configurator.cfg_product_variant">
+            <xpath expr="//b[@class='oe_price']" position="replace">
+                <b t-if="not user_id.partner_id.name == 'Public user'" class="oe_price" style="white-space: nowrap;" t-field="product_id.lst_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;,&quot;display_currency&quot;: website.currency_id }"/>
+            </xpath>
+        </template>
         <!--
         <template id="custom_product_configurator_form_radio" inherit_id="website_product_configurator_v11.config_form_radio">
             <xpath expr="//div[@class='config_price']" position="replace">
