@@ -23,7 +23,8 @@
                             class="s_website_form form-horizontal container-fluid mt32" 
                             enctype="multipart/form-data"
                             data-model_name="crm.lead" 
-                            data-success_page="/page/website_crm.contactus_thanks">
+                            data-success_page="/contactus-thank-you">
+                        <!--data-success_page="/page/website_crm.contactus_thanks"-->
                         
                         
                         <div class="form-group form-field o_website_form_required_custom">
