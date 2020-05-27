@@ -115,15 +115,138 @@
             </xpath>
         </template>
         <template id="custom_product_configurator_cfg_product_variant" inherit_id="website_product_configurator.cfg_product_variant">
+            <!--
             <xpath expr="//b[@class='oe_price']" position="replace">
                 <b t-if="not user_id.partner_id.name == 'Public user'" class="oe_price" style="white-space: nowrap;" t-field="product_id.lst_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;,&quot;display_currency&quot;: website.currency_id }"/>
             </xpath>
-        </template>
-        <!--
-        <template id="custom_product_configurator_form_radio" inherit_id="website_product_configurator_v11.config_form_radio">
-            <xpath expr="//div[@class='config_price']" position="replace">
+            -->
+            <xpath expr="//form[@class='js_add_cart_variants']" position="replace">
+                <form t-if="not user_id.partner_id.name == 'Public user'" action="/shop/cart/update" class="js_add_cart_variants" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" class="product_id" name="product_id" t-att-value="product_id.id"/>
+                    <div class="js_product">
+                        <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price mt16">
+                            <h4 class="oe_price_h4 css_editable_mode_hidden">
+                                <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;" t-field="product_id.lst_price" t-options="{                                     &quot;widget&quot;: &quot;monetary&quot;,                                     &quot;from_currency&quot;: product_tmpl.currency_id,                                     &quot;display_currency&quot;: website.currency_id                                  }"/>
+                                <b class="oe_price" style="white-space: nowrap;" t-field="product_id.lst_price" t-options="{                                      &quot;widget&quot;: &quot;monetary&quot;,                                      &quot;display_currency&quot;: website.currency_id                                  }"/>
+                                <span itemprop="price" style="display:none;" t-esc="product_id.lst_price"/>
+                                <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name"/>
+                            </h4>
+                            <h4 class="css_non_editable_mode_hidden">
+                                <span t-field="product_id.lst_price" t-options="{                                        &quot;widget&quot;: &quot;monetary&quot;,                                       &quot;display_currency&quot;: product_tmpl.currency_id                                     }"/>
+                            </h4>
+                            <h4 class="hidden oe_not_available bg-warning">Produto Indisponível</h4>
+                        </div>
+                        <div class="mt8">
+                            <div class="css_quantity input-group oe_website_spinner">
+                                <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+                                    <i class="fa fa-minus"/>
+                                </a>
+                                <input type="text" class="js_quantity form-control" data-min="1" name="add_qty" value="1"/>
+                                <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json">
+                                    <i class="fa fa-plus"/>
+                                </a>
+                            </div>
+                            <button id="add_to_cart" type="submit" class="btn btn-default pull-left mb32 mt8 btn-primary">
+                                <p>Adicionar ao Carrinho
+                                    <br/>
+                                </p>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </xpath>
         </template>
-        -->
+        <template id="custom_shop_login" inherit_id="website_sale.products">
+            <xpath expr="//div[@class='container oe_website_sale']" position="replace">
+                <div t-if="not user_id.partner_id.name == 'Public user'" class="container oe_website_sale">
+                    <div class="products_pager">
+                        <div class="row" style="width: 100%;">
+                            <t t-call="website_sale.search">
+                                <t t-set="search_class" t-value="'pagination form-inline o_website_sale_search'"/>
+                            </t>
+                            <t t-call="website_sale.pricelist_list"/>
+                            <t t-call="website.pager"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="hidden" id="products_grid_before"/>
+                        <div class="col-md-12" id="products_grid">
+                            <table width="100%">
+                                <tbody>
+                                    <tr t-ignore="true">
+                                        <td t-foreach="range(0,rows)" t-as="row" t-attf-width="#{100/rows}%"/>
+                                    </tr>
+                                    <tr t-foreach="bins" t-as="tr_product">
+                                        <t t-foreach="tr_product" t-as="td_product">
+                                            <t t-if="td_product">
+                                                <t t-set="product" t-value="td_product['product']"/>
+                                                <td t-att-colspan="td_product['x'] != 1 and td_product['x']" t-att-rowspan="td_product['y'] != 1 and td_product['y']" t-attf-class="oe_product oe_grid oe-height-#{td_product['y']*2} #{ td_product['class'] }">
+                                                    <div class="oe_product_cart" t-att-data-publish="product.website_published and 'on' or 'off'">
+                                                        <t t-set="product_image_big" t-value="td_product['x']+td_product['y'] &gt; 2"/>
+                                                        <t t-call="website_sale.products_item"/>
+                                                    </div>
+                                                </td>
+                                            </t>
+                                            <td t-if="not td_product" class="oe-height-2"/>
+                                        </t>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <t t-if="not bins">
+                                <div class="text-center text-muted oe_product">
+                                    <h3 class="css_editable_display">Nenhum produto definido.</h3>
+                                    <p groups="sales_team.group_sale_manager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="products_pager">
+                        <t t-call="website.pager"/>
+                    </div>
+                </div>
+                <form t-else="" class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                        <label for="db" class="control-label">Banco de Dados</label>
+                        <div class="input-group">
+                            <input type="text" name="db" t-att-value="request.db" id="db" class="form-control" required="required" readonly="readonly"/>
+                            <span class="input-group-btn">
+                            <a href="/web/database/selector" class="btn btn-default">Selecionar <i class="fa fa-database"/></a>
+                            </span>
+                        </div>
+                    </div>
+
+                    <p style="text-align: center; color: #23527c;">
+                        Percebemos que não está logado. <br/>
+                        <b>Registre-se</b> e/ou <b>Acesse</b> para continuar!    
+                    </p>
+                    
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">E-mail</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus" autocapitalize="off"/>
+                    </div>
+
+                    <div class="form-group field-password">
+                        <label for="password" class="control-label">Senha</label>
+                        <input type="password" name="password" id="password" class="form-control" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                    </div>
+
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <p class="alert alert-success" t-if="message">
+                        <t t-esc="message"/>
+                    </p>
+
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="clearfix oe_login_buttons">
+                        <button type="submit" class="btn btn-primary">Acessar</button>
+                        <a t-attf-href="/web/signup?{{ keep_query() }}" class="btn btn-link pull-right">Não possui uma conta?</a>
+                    </div>
+                </form>
+            </xpath>
+        </template>
     </data>
 </openerp>
