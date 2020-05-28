@@ -115,13 +115,12 @@
             </xpath>
         </template>
         <template id="custom_product_configurator_cfg_product_variant" inherit_id="website_product_configurator.cfg_product_variant">
-            <!--
             <xpath expr="//b[@class='oe_price']" position="replace">
                 <b t-if="not user_id.partner_id.name == 'Public user'" class="oe_price" style="white-space: nowrap;" t-field="product_id.lst_price" t-options="{&quot;widget&quot;: &quot;monetary&quot;,&quot;display_currency&quot;: website.currency_id }"/>
             </xpath>
-            -->
+            <!--
             <xpath expr="//form[@class='js_add_cart_variants']" position="replace">
-                <form t-if="not user_id.partner_id.name == 'Public user'" action="/shop/cart/update" class="js_add_cart_variants" method="post">
+                <form action="/shop/cart/update" class="js_add_cart_variants" method="post">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" class="product_id" name="product_id" t-att-value="product_id.id"/>
                     <div class="js_product">
@@ -156,10 +155,12 @@
                     </div>
                 </form>
             </xpath>
+            -->
         </template>
         <template id="custom_shop_login" inherit_id="website_sale.products">
             <xpath expr="//div[@class='container oe_website_sale']" position="replace">
-                <div t-if="not user_id.partner_id.name == 'Public user'" class="container oe_website_sale">
+                <!--<div t-if="not user_id.partner_id.name == 'Public user'" class="container oe_website_sale">-->
+                <div class="container oe_website_sale">
                     <div class="products_pager">
                         <div class="row" style="width: 100%;">
                             <t t-call="website_sale.search">
@@ -205,6 +206,7 @@
                         <t t-call="website.pager"/>
                     </div>
                 </div>
+                <!--
                 <form t-else="" class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
@@ -246,6 +248,15 @@
                         <a t-attf-href="/web/signup?{{ keep_query() }}" class="btn btn-link pull-right">Não possui uma conta?</a>
                     </div>
                 </form>
+                -->
+            </xpath>
+        </template>
+        <template id="custom_br_website_sale_address" inherit_id="br_website_sale.br_website_sale_address">
+            <xpath expr="//input[@id='radioCompany']" position="replace">
+                <input type="radio" name="company_type" id="radioCompany" value="company" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'company'" onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CPF').textContent = 'CNPJ';"/> Pessoa Jurídica
+            </xpath>
+            <xpath expr="//input[@id='radioPerson']" position="replace">
+                <input type="radio" name="company_type" id="radioPerson" value="person" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'person'" onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CNPJ').textContent = 'CPF';"/> Pessoa Física
             </xpath>
         </template>
     </data>
