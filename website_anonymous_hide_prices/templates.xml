@@ -216,14 +216,6 @@
                 -->
             </xpath>
         </template>
-        <template id="custom_br_website_sale_address" inherit_id="br_website_sale.br_website_sale_address">
-            <xpath expr="//input[@id='radioCompany']" position="replace">
-                <input type="radio" name="company_type" id="radioCompany" value="company" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'company'" onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CPF').textContent = 'CNPJ';"/> Pessoa Jurídica
-            </xpath>
-            <xpath expr="//input[@id='radioPerson']" position="replace">
-                <input type="radio" name="company_type" id="radioPerson" value="person" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'person'" onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CNPJ').textContent = 'CPF';"/> Pessoa Física
-            </xpath>
-        </template>
         <template id="custom_cart_lines" inherit_id="website_sale.cart_lines">
             <xpath expr="//th[@class='text-center td-price']" position="replace">
                 <th t-if="not user_id.partner_id.name == 'Public user'" class="text-center td-price">Preço</th>
@@ -246,16 +238,7 @@
                 </div>
             </xpath>
         </template>
-        <!--
         <template id="custom_address" inherit_id="br_website_sale.br_website_sale_address">
-        
-        
-            Array.apply(null, document.getElementById("id_country").options).filter(
-            function( elem, i, array ) {
-                return elem.text === 'Brasil';
-            });
-
-
             <xpath expr="//form" position="replace">
                 <form name="/shop/checkout" position="replace">
                     <form name="/shop/checkout" method="post" class="checkout_autoformat">
@@ -263,11 +246,16 @@
                             <label class="control-label" for="person_type">Tipo de Pessoa</label>
                         </div>
                         <div t-attf-class="radio #{error.get('company_type') and 'has-error' or ''} col-lg-12">
-                            <div class="col-xs-6 col-sm-3">
-                                <input type="radio" name="company_type" id="radioCompany" value="company" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'company'"/> Pessoa Jurídica
+                            <div t-if="'company_type' not in checkout" class="col-xs-6 col-sm-3">
+                                <input type="radio" name="company_type" id="radioCompany" value="company" t-att-checked="true"
+                                       onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CPF').textContent = 'CNPJ';"/> Pessoa Jurídica
+                            </div>
+                            <div t-else="" class="col-xs-6 col-sm-3">
+                                <input type="radio" name="company_type" id="radioCompany" value="company" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'company'"
+                                       onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CPF').textContent = 'CNPJ';"/> Pessoa Jurídica
                             </div>
                             <div class="col-xs-6 col-sm-3">
-                                <input type="radio" name="company_type" id="radioPerson" value="person" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'person'"/> Pessoa Física
+                                <input type="radio" name="company_type" id="radioPerson" value="person" t-att-checked="'company_type' in checkout and checkout['company_type'] == 'person'" onchange="Array.from(document.querySelectorAll('label')).find(el =&gt; el.textContent === 'CNPJ').textContent = 'CPF';"/> Pessoa Física
                             </div>
                         </div>
                         <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-md-6 div_name">
@@ -281,7 +269,8 @@
                             </div>
                         </t>
                         <div t-attf-class="form-group #{error.get('cnpj_cpf') and 'has-error' or ''} col-lg-6">
-                            <label class="control-label">CPF</label>
+                            <label t-if="'company_type' not in checkout or 'company_type' in checkout and checkout['company_type'] == 'company'" class="control-label">CNPJ</label>
+                            <label t-else="" class="control-label">CPF</label>
                             <input type="text" name="cnpj_cpf" class="form-control" t-att-value="'cnpj_cpf' in checkout and checkout['cnpj_cpf']"/>
                         </div>
                         <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-md-6" id="div_phone">
@@ -309,31 +298,26 @@
                             <label class="control-label" for="district">Bairro</label>
                             <input type="text" name="district" class="form-control" t-att-value="'district' in checkout and checkout['district']"/>
                         </div>
-                        <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-6">
+                        <div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''} col-lg-12">
                             <label class="control-label" for="street2">Complemento</label>
                             <input type="text" name="street2" class="form-control" t-att-value="'street2' in checkout and checkout['street2']"/>
                         </div>
-            
-            
-                        <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-md-6 div_country">
+                        <t t-set="default_country" t-value="request.env['res.country'].search([('name', '=', 'Brasil')])"/>
+                        <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-md-6 div_country" style="display: none;">
                             <label class="control-label" for="country_id">País</label>
                             <select id="id_country" name="country_id" class="form-control">
-                                <option value="">Country...</option>
-                                <t t-foreach="countries" t-as="c">
+                                <t t-foreach="countries.filtered(lambda x: x.id == default_country.id)" t-as="c">
                                     <option t-att-value="c.id" t-att-selected="c.id == (country and country.id or -1)">
                                         <t t-esc="c.name"/>
                                     </option>
                                 </t>
                             </select>
                         </div>
-            
-
                         <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
                             <label class="control-label" for="state_id">Estado</label>
                             <input id="input_state_id" type="hidden" t-att-value="'state' in checkout and checkout['state_id']"/>
                             <select id="select_state_id" name="state_id" class="form-control">
-                                <option value="">Estado...</option>
-                                <t t-foreach="country and country.state_ids or []" t-as="s">
+                                <t t-foreach="request.env['res.country.state'].search([('country_id', '=', default_country.id)])" t-as="s">
                                     <option t-att-value="s.id" t-att-selected="s.id == ('state_id' in checkout and country and checkout['state_id'] != '' and int(checkout['state_id']))">
                                         <t t-esc="s.name"/>
                                     </option>
@@ -366,6 +350,5 @@
                 </form>
             </xpath>
         </template>
-        -->
     </data>
 </openerp>
